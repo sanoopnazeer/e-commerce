@@ -1,0 +1,36 @@
+<section>
+
+  <div class="container">
+    <div class="d-flex justify-content-center">
+        <h3 class="">USER MANAGEMENT</h3>
+    </div>
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">User</th>
+          <th scope="col">Email</th>
+          <th scope="col">Permission</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <th scope="row">{{@index}}</th>
+          <td>{{this.Name}}</td>
+          <td>{{this.Email}}</td>
+          <td>
+
+            {{#if this.userBlocked}}
+                <a href="/admin/unblock-user/{{this._id}}"><button class="btn btn-danger" onclick="return confirm('Do you want to unblock {{this.Name}}?')">UNBLOCK</button></a>
+            {{else}}
+                <a href="/admin/block-user/{{this._id}}"><button class="btn btn-success" onclick="return confirm('Do you want to block {{this.Name}}?')">BLOCK</button></a>
+            {{/if}}
+          </td>
+          
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>

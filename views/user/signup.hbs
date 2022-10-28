@@ -1,0 +1,47 @@
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="container mt-3 pl-5">
+            <h2 class="text-center">Create new account</h2>
+            <form action="/signup" method="post">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="Name" class="form-control" name="Name" placeholder="Enter your name">
+                    </div>
+                    {{#if errors.nameMsg}}
+                    <div class="col-md-12 alert alert-danger" role="alert">
+                        {{errors.nameMsg}}
+                    </div>
+                    {{/if}}
+
+                <div class="form-group">
+                    <label>Mobile number</label>
+                    <input type="Mobilenumber" id="Mobilenumber" class="form-control" name="Mobilenumber" placeholder="Enter your mobile number">
+                    </div>                    
+
+                <div class="form-group">
+                    <label>Email address</label>
+                    <input type="email" class="form-control" id="Email" name="Email" placeholder="Enter email">
+                    </div>
+                    {{#if errors}}
+                    <div class="col-md-12 alert alert-danger" role="alert">
+                        {{errors.usernameMsg}}
+                    </div>
+                    {{/if}}
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" class="form-control" name="Password" placeholder="Password">
+                    </div>
+                    {{#if errors}}
+                    <div class="col-md-12 alert alert-danger" role="alert">
+                        {{errors.pwdMsg}}
+                    </div>
+                    {{/if}}
+                    <a href="/login">Already have an account?</a>
+                    <button type="submit" class="btn btn-primary float-right">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
