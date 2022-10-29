@@ -115,4 +115,8 @@ router.get('/add-to-cart/:id', (req, res) => {
   })
 })
 
+router.get('/single', (req, res) => {
+  res.render('user/single')
+})
+
 module.exports = router;

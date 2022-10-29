@@ -1,7 +1,8 @@
 var db = require('../config/connection')
 var collection = require('../config/collections');
 var objectId = require('mongodb').ObjectId
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { response } = require('../app');
 
 module.exports = {
     
@@ -75,6 +76,26 @@ module.exports = {
                 console.log("admin not found");
                 resolve({status : false})
             }
+        })
+    },
+    addCategory: (catData) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CATEGORY_COLLECTION).insertOne(catData).then((response) => {
+                resolve(catData)
+            })
+        })
+    },
+    getAllCategories: () => {
+        return new Promise(async(resolve, reject) => {
+           let categories = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray();
+           resolve(categories)
+        })
+    },
+    deleteCategory: (catId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({_id:objectId(catId)}).then((response) => {
+                resolve(response)
+            })
         })
     }
 }
