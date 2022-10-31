@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 
 
 const verifyLogin = (req, res, next) => {
-  if(req.session.user.loggedIn){
+  if(req.session && req.session.user && req.session.user.loggedIn){
     next()
   }else{
     res.redirect('/login');
@@ -15,10 +15,14 @@ const verifyLogin = (req, res, next) => {
 }
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
   let user = req.session.user
+  let cartCount = null
+  if(req.session.user){
+    cartCount = await userHelpers.getCartCount(req.session.user._id)
+  }
   productHelpers.getAllProducts().then((products) => {
-    res.render('user/view-products', {products, user});
+    res.render('user/view-products', {products, user, cartCount});
   })
 });
 
@@ -77,7 +81,7 @@ router.get('/otpLoginVerify', (req, res) => {
 
 router.post('/otpLoginVerify', (req, res) => {
   userHelpers.otpSignupVerifyPost(req, res)
-  req.session.loggedIn = true
+  req.session.user.loggedIn = true
   req.session.user = response
   res.redirect('/')
 })
@@ -103,7 +107,8 @@ router.get('/logout', (req, res) => {
 router.get('/cart', async(req, res) => {
   if(req.session.user){
   let products =await userHelpers.getCartProducts(req.session.user._id)
-    res.render('user/cart', products);
+  console.log(products);
+    res.render('user/cart', {products});
   }else{
     res.redirect('/login')
   }
@@ -115,8 +120,19 @@ router.get('/add-to-cart/:id', (req, res) => {
   })
 })
 
-router.get('/single', (req, res) => {
-  res.render('user/single')
+router.get('/single/:id', async(req, res) => {
+  let user = req.session.user
+  let product = await productHelpers.getProductDetails(req.params.id)
+  console.log(product);
+    res.render('user/single', {product})
+})
+
+router.get('/about', (req, res) => {
+  res.render('user/about')
+})
+
+router.get('/contact', (req, res) => {
+  res.render('user/contact')
 })
 
 module.exports = router;

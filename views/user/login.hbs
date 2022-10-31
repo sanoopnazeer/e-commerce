@@ -1,41 +1,11 @@
-{{!-- <h1>Login Page</h1>
-
-<form action="/home" method="post">
-    <div class="row my-3">
-        <label for="Username" class="col-md-1 col-form-label">Username</label>
-        <div class="col-md-3">
-            <input type="text" name="username" class="form-control" id="Username">
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="Password" class="col-md-1 col-form-label">Password</label>
-        <div class="col-md-3">
-            <input type="password" name="password" class="form-control" id="Password">
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Sign in</button>
-    {{#each item}}
-    <div class="alert alert-dark my-3 col-md-4" role="alert">
-        {{message}}
-    </div>
-
-    {{/each}}
-</form>
-<br>
-<a href="/signup" class="text-decoration-none">
-    <p>Create a new account</p>
-</a> --}}
-
-
 
 
 <div class="row">
     <div class="col-md-12 m-auto">
         <div class="container mt-5 pl-5" style="height: 450px">
             <h2 class="text-center">Login</h2>
-            <form action="/login" method="post">
-                <div class="form-group">
+            <form action="/login" method="post"> 
+                    <div class="form-group">
                     <label>Email address</label>
                     <input type="email" class="form-control" name="Email" placeholder="Enter email">
                     </div>

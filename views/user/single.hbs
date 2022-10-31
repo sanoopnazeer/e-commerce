@@ -7,14 +7,16 @@
 					<div class="flexslider">
 
 						<ul class="slides">
-							<li data-thumb="images/d2.jpg">
-								<div class="thumb-image"> <img src="images/d2.jpg" data-imagezoom="true" class="img-responsive"> </div>
+							<li data-thumb="/product-images/{{product._id}}.jpg">
+								<div class="thumb-image"> <img src="/product-images/{{product._id}}.jpg" data-imagezoom="true" class="img-responsive"> </div>
+
+								
 							</li>
-							<li data-thumb="images/d1.jpg">
-								<div class="thumb-image"> <img src="images/d1.jpg" data-imagezoom="true" class="img-responsive"> </div>
+							<li data-thumb="/product-images/{{product._id}}.jpg">
+								<div class="thumb-image"> <img src="/product-images/{{product._id}}.jpg" data-imagezoom="true" class="img-responsive"> </div>
 							</li>
-							<li data-thumb="images/d3.jpg">
-								<div class="thumb-image"> <img src="images/d3.jpg" data-imagezoom="true" class="img-responsive"> </div>
+							<li data-thumb="/product-images/{{product._id}}.jpg">
+								<div class="thumb-image"> <img src="/product-images/{{product._id}}.jpg" data-imagezoom="true" class="img-responsive"> </div>
 							</li>
 						</ul>
 						<div class="clearfix"></div>
@@ -22,8 +24,8 @@
 				</div>
 			</div>
 			<div class="col-md-8 single-right-left simpleCart_shelfItem">
-				<h3>Shoe Rock Vision(SRV) Sneakers (Blue)</h3>
-				<p><span class="item_price">$650</span>
+				<h3>{{product.Name}}</h3>
+				<p><span class="item_price">{{product.Price}}</span>
 					<del>$1,199</del>
 				</p>
 				<div class="rating1">
@@ -69,18 +71,31 @@
 				</div>
 				<div class="occasion-cart">
 					<div class="shoe single-item single_page_b">
-						<form action="#" method="post">
+						<form action="/add-to-wishlist/{{this._id}}" method="get">
+							<input type="hidden" name="cmd" value="_cart">
+							<input type="hidden" name="add" value="1">
+							<input type="hidden" name="shoe_item" value="Chikku Loafers">
+							<input type="hidden" name="amount" value="405.00">
+							<input type="submit" name="submit" value="Add to wishlist" class="button add">
+
+							<a href="" data-toggle="modal" data-target="#myModal1"></a>
+						</form>
+					</div>
+				</div>
+
+
+				<div class="occasion-cart">
+					<div class="shoe single-item single_page_b">
+						<form action="/add-to-cart/{{this._id}}" method="get">
 							<input type="hidden" name="cmd" value="_cart">
 							<input type="hidden" name="add" value="1">
 							<input type="hidden" name="shoe_item" value="Chikku Loafers">
 							<input type="hidden" name="amount" value="405.00">
 							<input type="submit" name="submit" value="Add to cart" class="button add">
 
-							<a href="#" data-toggle="modal" data-target="#myModal1"></a>
+							<a href="" data-toggle="modal" data-target="#myModal1"></a>
 						</form>
-
 					</div>
-
 				</div>
 				<ul class="social-nav model-3d-0 footer-social social single_page">
 					<li class="share">Share On : </li>
