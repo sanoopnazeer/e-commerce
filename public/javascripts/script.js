@@ -5,6 +5,7 @@
 			url: '/add-to-cart/'+proId,
 			method: 'get',
 			success: (response) => {
+                console.log(response+'hello');
                 if(response.status){
                     let count = $('#cart-count').html()
                     count = parseInt(count)+1

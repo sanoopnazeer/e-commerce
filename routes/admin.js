@@ -78,6 +78,18 @@ router.get("/add-product", function (req, res) {
 });
 
 router.post("/add-product", (req, res) => {
+//   console.log(req.body.Price)
+
+//   const number = req.body.Price
+//   const num = parseInt(number)
+//  Number.isInteger(num)
+//   const cartobj = {
+//     Name: req.body.Name,
+//     Category: req.body.Category,
+//     Price: num,
+//     Description: req.body.Description
+//   }
+//   console.log(cartobj);
   productHelpers.addProduct(req.body, (id) => {
     let image = req.files.Image;
     console.log(id);
@@ -100,8 +112,11 @@ router.get("/delete-product/:id", (req, res) => {
 
 router.get("/edit-product/:id", async (req, res) => {
   let product = await productHelpers.getProductDetails(req.params.id);
+  productHelpers.getAllCategories().then((categories) => {
   console.log(product);
-  res.render("admin/edit-product", { product });
+  res.render("admin/edit-product", { product, categories });
+})
+
 });
 
 router.post("/edit-product/:id", (req, res) => {

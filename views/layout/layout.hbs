@@ -68,7 +68,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	{{else}}
 	{{>user-header}}
 	{{{body}}}
-	{{!-- {{>user-footer}} --}}
+	{{>user-footer}}
 	{{/if}}
 
 
@@ -84,7 +84,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script>
 		<script src="/javascripts/script.js"></script>
 	<!-- js -->
 	<script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
@@ -191,7 +190,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</script>
 	<!-- //FlexSlider-->
 
-	<!--quantity-->
+	{{!-- <!--quantity-->
 	<script>
 		$('.value-plus').on('click', function () {
 			var divUpd = $(this).parent().find('.value'),
@@ -205,7 +204,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			if (newVal >= 1) divUpd.text(newVal);
 		});
 	</script>
-	<!--quantity-->
+	<!--quantity--> --}}
 	<script>
 		$(document).ready(function (c) {
 			$('.close1').on('click', function (c) {

@@ -234,7 +234,7 @@
 											<div class="grid_meta">
 												<div class="product_price">
 													<div class="grid-price ">
-														<span class="money ">{{this.Price}}</span>
+														<span class="money ">Rs. {{this.Price}}</span>
 													</div>
 												</div>
 												<ul class="stars">
@@ -251,16 +251,8 @@
 												</ul>
 											</div>
 											<div class="shoe single-item hvr-outline-out">
-												<form action="/add-to-cart/{{this._id}}" method="get">
-													<input type="hidden" name="cmd" value="_cart">
-													<input type="hidden" name="add" value="1">
-													<input type="hidden" name="shoe_item" value="{{this.Name}}">
-													<input type="hidden" name="amount" value="{{this.Price}}">
-													<button type="submit" class="shoe-cart pshoe-cart"><i
-															class="fa fa-cart-plus" aria-hidden="true"></i></button>
-
-													<a href="#" data-toggle="modal" data-target="#myModal1"></a>
-												</form>
+												<button type="submit" onclick="addToCart('{{this._id}}')" class="shoe-cart pshoe-cart"><i
+														class="fa fa-cart-plus" aria-hidden="true"></i></button>
 											</div>
 										</div>
 										<div class="clearfix"></div>

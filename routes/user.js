@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 
 
 const verifyLogin = (req, res, next) => {
-  if(req.session && req.session.user && req.session.user.loggedIn){
+  if(req.session.loggedIn){
     next()
   }else{
     res.redirect('/login');
@@ -27,7 +27,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  if(req.session.user){
+  if(req.session.loggedIn){
     res.redirect('/');
   }else{
   res.render('user/login', {"loginErr": req.session.userLoginErr});
@@ -90,7 +90,7 @@ router.post('/login', (req, res) => {
   userHelpers.doLogin(req.body).then((response) => {
     if(response.status){
       req.session.user = response.user 
-      req.session.user.loggedIn = true
+      req.session.loggedIn = true
       res.redirect('/');
     }else{
       req.session.userLoginErr="Invalid username or password"
@@ -104,11 +104,17 @@ router.get('/logout', (req, res) => {
   res.redirect('/');
 })
 
-router.get('/cart', async(req, res) => {
+router.get('/cart',verifyLogin, async(req, res) => {
   if(req.session.user){
+  let user = req.session.user
+  cartCount = await userHelpers.getCartCount(req.session.user._id)
   let products =await userHelpers.getCartProducts(req.session.user._id)
-  console.log(products);
-    res.render('user/cart', {products});
+  let total = await userHelpers.getTotalAmount(req.session.user._id)
+  
+  // console.log(products);
+  // console.log(total+"hello totall");
+  console.log(req.session.user._id);
+    res.render('user/cart', {products, user, cartCount, total});
   }else{
     res.redirect('/login')
   }
@@ -116,14 +122,18 @@ router.get('/cart', async(req, res) => {
 
 router.get('/add-to-cart/:id', (req, res) => {
   userHelpers.addToCart(req.params.id, req.session.user._id).then(() => {
-    res.redirect('/')
-  })
+res.json({status: true}) 
+ })
 })
 
 router.get('/single/:id', async(req, res) => {
-  let user = req.session.user
+  if(req.session.user){
+    let user = req.session.user
+    cartCount = await userHelpers.getCartCount(req.session.user._id)
+    let product = await productHelpers.getProductDetails(req.params.id)
+    res.render('user/single', {product, user, cartCount})
+  }
   let product = await productHelpers.getProductDetails(req.params.id)
-  console.log(product);
     res.render('user/single', {product})
 })
 
@@ -133,6 +143,22 @@ router.get('/about', (req, res) => {
 
 router.get('/contact', (req, res) => {
   res.render('user/contact')
+})
+
+router.post('/change-product-quantity', (req, res, next) => {
+  userHelpers.changeProductQuantity(req.body).then((response) => {
+      res.json(response)
+  })
+})
+
+router.post('/remove-item', (req, res) => {
+  userHelpers.removeItem(req.body).then((response) => {
+    res.json(response)
+  })
+})
+
+router.get('/make-payment', (req, res) => {
+  res.render('user/payment')
 })
 
 module.exports = router;
