@@ -12,7 +12,7 @@
 						<tr>
 							<th>SL No.</th>
 							<th>Product</th>
-							<th>Quality</th>
+							<th>Quantity</th>
 							<th>Product Name</th>
 
 							<th>Price</th>
@@ -22,23 +22,28 @@
 					<tbody>
 						{{#each products}}
 
-						<tr class="rem1">							
+						<tr class="rem1">
 							<td class="invert">{{@index}}</td>
 							<td class="invert-image"><a href="/single/{{this.product._id}}"><img
-										src="/product-images/{{this.product._id}}.jpg" alt=" " class="img-responsive"></a></td>
+										src="/product-images/{{this.product._id}}.jpg" alt=" "
+										class="img-responsive"></a></td>
 							<td class="invert">
 								<div class="quantity">
 									<div class="quantity-select">
-										<button class="entry value-minus" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
-										<div class="entry value"><span id="{{this.product._id}}">{{this.quantity}}</span></div>
-										<button class="entry value-plus active" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+										<button class="entry value-minus"
+											onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',-1)">-</button>
+										<div class="entry value"><span
+												id="{{this.product._id}}">{{this.quantity}}</span></div>
+										<button class="entry value-plus active"
+											onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
 									</div>
 								</div>
 							</td>
 							<td class="invert">{{this.product.Name}}</td>
 							<td class="invert">Rs. {{this.product.Price}}</td>
 							<td class="invert">
-							<button class="btn btn-danger" onclick="removeItem('{{this._id}}','{{this.product._id}}')">REMOVE</button>
+								<button class="btn btn-danger"
+									onclick="removeItem('{{this._id}}','{{this.product._id}}')">REMOVE</button>
 							</td>
 						</tr>
 						{{/each}}
@@ -48,7 +53,7 @@
 			</div>
 			<div class="checkout-left">
 				<div class="col-md-4 checkout-left-basket">
-					<h4>Continue to basket</h4>
+					<h4>Amount to be paid</h4>
 					<ul>
 						{{#each products}}
 						<li>Product{{@index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
@@ -56,94 +61,52 @@
 						<li>Total <i>-</i> <span>Rs. <span id="total">{{total}}</span></span></li>
 					</ul>
 				</div>
-				<div class="col-md-8 address_form">
-					<h4>Add a new Details</h4>
-					<form action="payment.html" method="post" class="creditly-card-form agileinfo_form">
-						<section class="creditly-wrapper wrapper">
-							<div class="information-wrapper">
-								<div class="first-row form-group">
-									<div class="controls">
-										<label class="control-label">Full name: </label>
-										<input class="billing-address-name form-control" type="text" name="name"
-											placeholder="Full name">
-									</div>
-									<div class="card_number_grids">
-										<div class="card_number_grid_left">
-											<div class="controls">
-												<label class="control-label">Mobile number:</label>
-												<input class="form-control" type="text" placeholder="Mobile number">
-											</div>
-										</div>
-										<div class="card_number_grid_right">
-											<div class="controls">
-												<label class="control-label">Landmark: </label>
-												<input class="form-control" type="text" placeholder="Landmark">
-											</div>
-										</div>
-										<div class="clear"> </div>
-									</div>
-									<div class="controls">
-										<label class="control-label">Town/City: </label>
-										<input class="form-control" type="text" placeholder="Town/City">
-									</div>
-									<div class="controls">
-										<label class="control-label">Address type: </label>
-										<select class="form-control option-w3ls">
-											<option>Office</option>
-											<option>Home</option>
-											<option>Commercial</option>
+				<div class="checkout-right-basket">
+					<button class="submit check_out">
+						<a href="/place-order">PLACE ORDER</a>
 
-										</select>
-									</div>
-								</div>
-								<button class="submit check_out">Delivery to this Address</button>
-							</div>
-						</section>
-					</form>
-					<div class="checkout-right-basket">
-						<a href="/make-payment">Make a Payment </a>
-					</div>
+					</button>
 				</div>
 
-				<div class="clearfix"> </div>
-
-				{{else}}
-				<h1>NO ITEMS IN THE CART</h1>
-
-				{{/if}}
 				<div class="clearfix"></div>
 			</div>
+			{{else}}
+			<h1>NO ITEMS IN THE CART</h1>
+
+			{{/if}}
 		</div>
 	</div>
 
 
 
 	<script>
-		function changeQuantity(cartId, proId, count){
+		function changeQuantity(cartId, proId, userId, count) {
 			let quantity = parseInt(document.getElementById(proId).innerHTML)
 			count = parseInt(count)
 
 			$.ajax({
-				url : '/change-product-quantity',
-				data : {
+				url: '/change-product-quantity',
+				data: {
 					cart: cartId,
 					product: proId,
+					user: userId,
 					count: count,
 					quantity: quantity
 				},
 				method: 'post',
 				success: (response) => {
-					if(response.removeProduct){
+					if (response.removeProduct) {
 						alert("Product Removed from cart")
 						location.reload()
-					}else{
-						document.getElementById(proId).innerHTML=quantity+count
-					}		 
+					} else {
+						document.getElementById(proId).innerHTML = quantity + count
+						document.getElementById('total').innerHTML = response.total
+					}
 				}
 			})
 		}
 
-		function removeItem(cartId, proId){
+		function removeItem(cartId, proId) {
 			$.ajax({
 				url: '/remove-item',
 				data: {
@@ -152,11 +115,11 @@
 				},
 				method: 'post',
 				success: (response) => {
-					if(response.removeProduct){
+					if (response.removeProduct) {
 						alert("Product Removed from cart")
 						location.reload()
-					}else{
-						document.getElementById(proId).innerHTML=quantity.count
+					} else {
+						document.getElementById(proId).innerHTML = quantity.count
 					}
 				}
 			})

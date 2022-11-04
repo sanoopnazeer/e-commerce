@@ -123,7 +123,7 @@ router.post("/edit-product/:id", (req, res) => {
   let id = req.params.id;
   productHelpers.updateProduct(req.params.id, req.body).then(() => {
     res.redirect("/admin/view-products");
-    if (req.files.Image) {
+    if (req.files) {
       let image = req.files.Image;
       image.mv("./public/product-images/" + id + ".jpg");
     }
