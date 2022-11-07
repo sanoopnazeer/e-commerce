@@ -1,0 +1,59 @@
+<div class="col-md-12" style="text-align: center; margin-top: 20px;">
+    <h3>YOUR ORDERS</h3>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {{#if allOrders}}
+            <table id="example" class="display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>City</th>
+                        <th>Mobile Number</th>
+                        <th>Payment Method</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Products</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each allOrders}}
+                    <tr>
+                        <td>{{@index}}</td>
+                        <td>{{this.deliveryDetails.City}}</td>
+                        <td>{{this.deliveryDetails.Mobile}}</td>
+                        <td>{{this.paymentMethod}}</td>
+                        <td>Rs. {{this.totalAmount}}</td>
+                        <td>{{this.status}}</td>
+                        <td><a href="/view-ordered-items?id={{this._id}}"><button
+                                    class="btn btn-success">VIEW PRODUCTS</button></a></td>
+                        </td>
+                        <td>
+                            <a href="/cancel-order/{{this._id}}"><button
+                                    class="btn btn-danger">CANCEL ORDER</button></a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    </tfoot>
+            </table>
+            {{else}}
+            <div class="col-md-12" style="text-align: center; margin-top: 20px;">
+                <h3>YOU HAVEN'T PLACED ANY ORDERS</h3>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
