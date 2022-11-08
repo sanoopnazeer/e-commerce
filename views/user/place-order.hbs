@@ -15,7 +15,7 @@
 				</div>
 				<div class="col-md-8 address_form">
 					<h4>Add delivery Details</h4>
-					<form action="payment.html" method="post" id="checkout-form"
+					<form action="" method="post" id="checkout-form"
 						class="creditly-card-form agileinfo_form">
 						<section class="creditly-wrapper wrapper">
 							<div class="information-wrapper">
@@ -29,13 +29,14 @@
 										<div class="card_number_grid_left">
 											<div class="controls">
 												<label class="control-label">Mobile number:</label>
-												<input class="form-control" type="text" placeholder="Mobile number" name="Mobile">
+												<input class="form-control" type="text" placeholder="Mobile number"
+													name="Mobile">
 											</div>
 										</div>
 									</div>
 									<div class="controls">
 										<label class="control-label">Town/City: </label>
-										<input class="form-control" type="text" placeholder="Town/City"name="City">
+										<input class="form-control" type="text" placeholder="Town/City" name="City">
 										<input type="text" name="userId" id="" value="{{user._id}}" hidden>
 									</div>
 									<div class="controls">
@@ -67,14 +68,61 @@
 		$.ajax({
 			url: '/place-order',
 			method: 'post',
-			data:$('#checkout-form').serialize(),
-			success:(response) => {
-				alert(response)
-				if(response.status){
-					location.href='/order-successful'
+			data: $('#checkout-form').serialize(),
+			success: (response) => {
+				if (response.codSuccess) {
+					location.href = '/order-successful'
+				} else {
+					razorpayPayment(response)
 				}
 			}
 		})
 	})
-</script>
 
+	function razorpayPayment(order) {
+		var options = {
+			"key": "rzp_test_tofGvmp2BOkbs9", // Enter the Key ID generated from the Dashboard
+			"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+			"currency": "INR",
+			"name": "Downy Shoes",
+			"description": "Test Transaction",
+			"image": "https://example.com/your_logo",
+			"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+			"handler": function (response) {
+
+				verifyPayment(response, order)
+			},
+			"prefill": {
+				"name": "Gaurav Kumar",
+				"email": "gaurav.kumar@example.com",
+				"contact": "9999999999"
+			},
+			"notes": {
+				"address": "Razorpay Corporate Office"
+			},
+			"theme": {
+				"color": "#3399cc"
+			}
+		};
+		var rzp1 = new Razorpay(options);
+		    rzp1.open();
+	}
+	function verifyPayment(payment, order){
+		$.ajax({
+			url: '/verify-payment',
+			data: {
+				payment,
+				order
+			}, 
+			method: 'post',
+			success: (response) => {
+				if(response.status){
+					location.href = '/order-successful'
+				}else{
+					alert("Payment failed")
+				}
+			}
+		})
+	}
+
+</script>

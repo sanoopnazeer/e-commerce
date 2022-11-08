@@ -6,11 +6,12 @@ const { CART_COLLECTION } = require("../config/collections");
 var objectId = require("mongodb").ObjectId;
 const dotenv = require("dotenv").config();
 const client = require("twilio")(process.env.accountSid, process.env.authToken);
-const Razorpay = require('razorpay')
+const Razorpay = require("razorpay");
+const { resolve } = require("node:path");
 
 var instance = new Razorpay({
-  key_id: 'rzp_test_tofGvmp2BOkbs9',
-  key_secret: 'i9kuGb5IsGDSYSzerLBZpl18',
+  key_id: "rzp_test_tofGvmp2BOkbs9",
+  key_secret: "i9kuGb5IsGDSYSzerLBZpl18",
 });
 
 module.exports = {
@@ -372,8 +373,7 @@ module.exports = {
           db.get()
             .collection(collection.CART_COLLECTION)
             .deleteOne({ user: objectId(order.userId) });
-            console.log(response._id);
-          resolve(response._id);
+          resolve(response.insertedId);
         });
     });
   },
@@ -438,15 +438,58 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.get()
         .collection(collection.ORDER_COLLECTION)
-        .updateOne({ _id: objectId(orderId) }, { $set: { status: "cancelled" } })
+        .updateOne(
+          { _id: objectId(orderId) },
+          { $set: { status: "cancelled" } }
+        )
         .then((response) => {
           resolve(response);
         });
     });
   },
-  generateRazorpay: (orderId) => {
+  generateRazorpay: (orderId, total) => {
     return new Promise((resolve, reject) => {
+      var options = {
+        amount: total*100,
+        currency: "INR",
+        receipt: "" + orderId,
+      };
 
-    })
-  }
+      instance.orders.create(options, function (err, order) {
+        if (err) {
+          console.log(err);
+        } else {
+          resolve(order);
+        }
+      });
+    });
+  },
+  verifyPayment: (details) => {
+    return new Promise((resolve, reject) => {
+      const { createHmac } = require("node:crypto");
+      let hmac = createHmac("sha256", "i9kuGb5IsGDSYSzerLBZpl18");
+
+      hmac.update(
+        details["payment[razorpay_order_id]"] +
+          "|" +
+          details["payment[razorpay_payment_id]"]
+      );
+      hmac = hmac.digest("hex");
+      if (hmac == details["payment[razorpay_signature]"]) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  },
+  changePaymentStatus: (orderId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .updateOne({ _id: objectId(orderId) }, { $set: { status: "placed" } })
+        .then(() => {
+          resolve();
+        });
+    });
+  },
 };
