@@ -40,6 +40,8 @@ module.exports = {
                     Name: proDetails.Name,
                     Description: proDetails.Description,
                     Price: proDetails.Price,
+                    Stock: proDetails.Stock,
+                    Sales: proDetails.Sales,
                     Category: proDetails.Category
                 }
             }).then((response) => {
@@ -97,5 +99,11 @@ module.exports = {
                 resolve(response)
             })
         })
-    }
+    },
+    getAllOrders:() => {
+        return new Promise(async(resolve, reject) => {
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).find().toArray();
+            resolve(orders);
+        })
+    },
 }

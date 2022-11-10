@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 
 
 const verifyLogin = (req, res, next) => {
-  if(req.session.loggedIn){
+  if(req.session.userLoggedIn){
     next()
   }else{
     res.redirect('/login');
@@ -27,7 +27,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  if(req.session.loggedIn){
+  if(req.session.userLoggedIn){
     res.redirect('/');
   }else{
   res.render('user/login', {"loginErr": req.session.userLoginErr});
@@ -69,7 +69,7 @@ router.post('/signup',
     } else {
           userHelpers.doSignup(req.body).then((response) => {
           req.session.user = response
-          req.session.user.loggedIn = true;
+          req.session.userLoggedIn = true;
           res.redirect('/otpLoginVerify')
   })
     }
@@ -81,8 +81,8 @@ router.get('/otpLoginVerify', (req, res) => {
 
 router.post('/otpLoginVerify', (req, res) => {
   userHelpers.otpSignupVerifyPost(req, res)
-  req.session.user.loggedIn = true
   req.session.user = response
+  req.session.userLoggedIn = true
   res.redirect('/')
 })
 
@@ -90,7 +90,7 @@ router.post('/login', (req, res) => {
   userHelpers.doLogin(req.body).then((response) => {
     if(response.status){
       req.session.user = response.user 
-      req.session.loggedIn = true
+      req.session.userLoggedIn = true
       res.redirect('/');
     }else{
       req.session.userLoginErr="Invalid username or password"
@@ -101,19 +101,19 @@ router.post('/login', (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.session.user=null
+  req.session.userLoggedIn = false
   res.redirect('/');
 })
 
 router.get('/cart',verifyLogin, async(req, res) => {
-  if(req.session.user){
+  let products = await userHelpers.getCartProducts(req.session.user._id)
+  let total = 0
+  if(products.length>0){
+    total = await userHelpers.getTotalAmount(req.session.user._id) 
+  }
   let user = req.session.user._id
   cartCount = await userHelpers.getCartCount(req.session.user._id)
-  let products = await userHelpers.getCartProducts(req.session.user._id)
-  let total = await userHelpers.getTotalAmount(req.session.user._id)
     res.render('user/cart', {products, user, cartCount, total});
-  }else{
-    res.redirect('/login')
-  }
 })
 
 router.get('/add-to-cart/:id', (req, res) => {
@@ -122,15 +122,17 @@ res.json({status: true})
  })
 })
 
-router.get('/single/:id', async(req, res) => {
+router.get('/single', async(req, res) => {
   if(req.session.user){
     let user = req.session.user
+    let proId = req.query.id
     cartCount = await userHelpers.getCartCount(req.session.user._id)
-    let product = await productHelpers.getProductDetails(req.params.id)
+    let product = await productHelpers.getProductDetails(proId)
     res.render('user/single', {product, user, cartCount})
   }
   console.log(req.params.id);
-  let product = await productHelpers.getProductDetails(req.params.id)
+  let proId = req.query.id
+  let product = await productHelpers.getProductDetails(proId)
     res.render('user/single', {product})
 })
 
@@ -184,8 +186,9 @@ router.get('/order-successful', (req, res) => {
 
 router.get('/view-orders', async(req, res) => {
   const user = req.session.user
+  cartCount = await userHelpers.getCartCount(req.session.user._id)
   const allOrders = await userHelpers.getAllOrders(req.session.user._id)
-    res.render('user/view-orders', {user, allOrders})
+    res.render('user/view-orders', {user, allOrders, cartCount})
 })
 
 router.get('/view-ordered-items', async(req, res) => {

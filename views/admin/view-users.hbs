@@ -1,8 +1,8 @@
-<section>
+{{!-- <section>
 
   <div class="container">
     <div class="d-flex justify-content-center">
-        <h3 class="">USER MANAGEMENT</h3>
+      <h3 class="">USER MANAGEMENT</h3>
     </div>
     <table class="table mt-5">
       <thead>
@@ -22,15 +22,118 @@
           <td>
 
             {{#if this.userBlocked}}
-                <a href="/admin/unblock-user/{{this._id}}"><button class="btn btn-success" onclick="return confirm('Do you want to unblock {{this.Name}}?')">UNBLOCK</button></a>
+            <a href="/admin/unblock-user/{{this._id}}"><button class="btn btn-success"
+                onclick="return confirm('Do you want to unblock {{this.Name}}?')">UNBLOCK</button></a>
             {{else}}
-                <a href="/admin/block-user/{{this._id}}"><button class="btn btn-danger" onclick="return confirm('Do you want to block {{this.Name}}?')">BLOCK</button></a>
+            <a href="/admin/block-user/{{this._id}}"><button class="btn btn-danger"
+                onclick="return confirm('Do you want to block {{this.Name}}?')">BLOCK</button></a>
             {{/if}}
           </td>
-          
+
         </tr>
         {{/each}}
       </tbody>
     </table>
   </div>
-</section>
+</section> --}}
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">User Management</li>
+          </ol>
+          <h6 class="font-weight-bolder mb-0">List of all users</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <div class="input-group input-group-outline">
+              <label class="form-label">Type here...</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+              <a href="/admin" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user me-sm-1"></i>
+                <span class="d-sm-inline d-none">Sign In</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+
+
+
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">USER MANAGEMENT</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <table id="example" class="display nowrap" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Sl.No</th>
+                      <th>Name</th>
+                      <th>Mobilenumber</th>
+                      <th>Email</th>
+                      <th>Permission</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each users}}
+                    <tr>
+                      <td>{{@index}}</td>
+                      <td>{{this.Name}}</td>
+                      <td>{{this.Mobilenumber}}</td>
+                      <td>{{this.Email}}</td>
+                      <td>
+                        {{#if this.userBlocked}}
+                        <a href="/admin/unblock-user/{{this._id}}"><button class="btn btn-success"
+                            onclick="return confirm('Do you want to unblock {{this.Name}}?')">UNBLOCK</button></a>
+                        {{else}}
+                        <a href="/admin/block-user/{{this._id}}"><button class="btn btn-danger"
+                            onclick="return confirm('Do you want to block {{this.Name}}?')">BLOCK</button></a>
+                        {{/if}}
+                      </td>
+                    </tr>
+                    {{/each}}
+                    </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            $(document).ready(function () {
+              $('#example').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+              });
+            });
+          </script>
+</main>

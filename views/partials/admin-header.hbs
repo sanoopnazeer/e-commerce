@@ -1,10 +1,11 @@
-<header>
+{{!-- <header>
 	<!-- banner -->
-<div class="banner_top innerpage" id="home">
+	<div class="banner_top innerpage" id="home">
 		<div class="wrapper_top_w3layouts">
 			<div class="header_agileits">
 				<div class="logo inner_page_log">
-					<h2><a class="navbar-brand"  style="opacity: 0.5;" href="index.html"><span>Downy Shoes - Admin Page</span></a></h2>
+					<h2><a class="navbar-brand" style="opacity: 0.5;" href="index.html"><span>Downy Shoes - Admin
+								Page</span></a></h2>
 				</div>
 				<div class="overlay overlay-contentpush">
 					<button type="button" class="overlay-close"><i class="fa fa-times" aria-hidden="true"></i></button>
@@ -20,17 +21,114 @@
 				<div class="mobile-nav-button">
 					<button id="trigger-overlay" type="button"><i class="fa fa-bars" aria-hidden="true"></i></button>
 				</div>
-				
-		<!-- /banner_inner -->
-		<div class="services-breadcrumb_w3ls_agileinfo">
-			<div class="inner_breadcrumb_agileits_w3">
 
-				<ul class="short">
-					<li><a href="/views/admin/view-products.hbs">Home</a><i>|</i></li>
-					<li>About</li>
-				</ul>
+				<!-- /banner_inner -->
+				<div class="services-breadcrumb_w3ls_agileinfo">
+					<div class="inner_breadcrumb_agileits_w3">
+
+						<ul class="short">
+							<li><a href="/views/admin/view-products.hbs">Home</a><i>|</i></li>
+							<li>About</li>
+						</ul>
+					</div>
+				</div>
+				<!-- //banner_inner -->
 			</div>
+</header> --}}
+
+
+<body class="g-sidenav-show  bg-gray-200">
+	<aside
+		class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+		id="sidenav-main">
+		<div class="sidenav-header">
+			<i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+				aria-hidden="true" id="iconSidenav"></i>
+			<a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
+				target="_blank">
+				<img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+				<span class="ms-1 font-weight-bold text-white">ADMIN PANEL</span>
+			</a>
 		</div>
-		<!-- //banner_inner -->
-	</div>
-    </header>
+		<hr class="horizontal light mt-0 mb-2">
+		<div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link text-white active bg-gradient-primary" href="">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">dashboard</i>
+						</div>
+						<span class="nav-link-text ms-1">Dashboard</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin/view-users">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">table_view</i>
+						</div>
+						<span class="nav-link-text ms-1">User Management</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin/view-products">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">receipt_long</i>
+						</div>
+						<span class="nav-link-text ms-1">Product Management</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin/add-categories">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">view_in_ar</i>
+						</div>
+						<span class="nav-link-text ms-1">Category Management</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin/view-orders">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">format_textdirection_r_to_l</i>
+						</div>
+						<span class="nav-link-text ms-1">Order Management</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin/allCoupons">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">table_view</i>
+						</div>
+						<span class="nav-link-text ms-1">Coupon Management</span>
+					</a>
+				</li>
+				<li class="nav-item mt-3">
+					<h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages
+					</h6>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="../pages/profile.html">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">person</i>
+						</div>
+						<span class="nav-link-text ms-1">Profile</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">login</i>
+						</div>
+						<span class="nav-link-text ms-1">Sign In</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/adminSignup">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">assignment</i>
+						</div>
+						<span class="nav-link-text ms-1">Sign Up</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</aside>

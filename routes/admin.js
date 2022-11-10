@@ -18,13 +18,14 @@ const verifyLogin = (req, res, next) => {
 router.get("/", function (req, res, next) {
   res.render("admin/adminLogin", {
     loginErr: req.session.adminLoginErr,
-    admin: true,
+    // admin: true,
+    layout: 'adminLayout.hbs'
   });
   req.session.adminLoginErr = false;
 });
 
 router.get("/adminSignup", function (req, res, next) {
-  res.render("admin/adminSignup", { admin: true });
+  res.render("admin/adminSignup", {layout: 'adminLayout.hbs'});
 });
 
 router.post("/adminSignup", (req, res) => {
@@ -40,7 +41,7 @@ router.post("/adminLogin", (req, res) => {
     if (response.status) {
       req.session.admin = response.admin;
       req.session.admin.loggedIn = true;
-      res.render("admin/adminHome", { admin: true });
+      res.render("admin/adminHome", { admin: true, layout: 'adminLayout.hbs' });
     } else {
       req.session.adminLoginErr = "Invalid username or password";
       res.redirect("/admin");
@@ -51,13 +52,13 @@ router.post("/adminLogin", (req, res) => {
 router.get("/view-products", function (req, res) {
   productHelper.getAllProducts().then((products) => {
     console.log(products);
-    res.render("admin/view-products", { admin: true, products });
+    res.render("admin/view-products", { admin: true, products, layout: 'adminLayout.hbs'});
   });
 });
 
 router.get("/view-users", function (req, res) {
   userHelpers.getAllUsers().then((users) => {
-    res.render("admin/view-users", { admin: true, users });
+    res.render("admin/view-users", { admin: true, users, layout: 'adminLayout.hbs'});
   });
 });
 
@@ -73,7 +74,7 @@ router.get("/unblock-user/:id", async (req, res) => {
 
 router.get("/add-product", function (req, res) {
   productHelpers.getAllCategories().then((categories) => {
-    res.render("admin/add-product", { admin: true, categories });
+    res.render("admin/add-product", { admin: true, categories, layout: 'adminLayout.hbs' });
   })
 });
 
@@ -110,11 +111,11 @@ router.get("/delete-product/:id", (req, res) => {
   });
 });
 
-router.get("/edit-product/:id", async (req, res) => {
-  let product = await productHelpers.getProductDetails(req.params.id);
+router.get("/edit-product", async (req, res) => {
+  let proId = req.query.id
+  let product = await productHelpers.getProductDetails(proId);
   productHelpers.getAllCategories().then((categories) => {
-  console.log(product);
-  res.render("admin/edit-product", { product, categories });
+  res.render("admin/edit-product", { product, categories, layout: 'adminLayout.hbs'});
 })
 
 });
@@ -140,7 +141,7 @@ router.post("/adminLogout", function (req, res) {
 
 router.get("/add-categories", (req, res) => {
   productHelpers.getAllCategories().then((categories) => {
-      res.render("admin/add-categories", {admin: true, categories});
+      res.render("admin/add-categories", {admin: true, categories, layout: 'adminLayout.hbs'});
   });
 });
 
@@ -154,6 +155,12 @@ router.get('/delete-category/:id', (req, res) => {
   let catId = req.params.id
   productHelpers.deleteCategory(catId).then((response) => {
     res.redirect('/admin/add-categories')
+  })
+})
+
+router.get('/view-orders', (req, res) => {
+  productHelpers.getAllOrders().then((orders) => {
+    res.render('admin/view-orders', {admin: true, orders, layout: 'adminLayout.hbs'})
   })
 })
 
