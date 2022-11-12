@@ -63,7 +63,7 @@
               <th>Payment method</th>
               <th>Total Amount</th>
               <th>Status</th>
-              <th>Date</th>
+              {{!-- <th>Date</th> --}}
               <th>Action</th>
               <th>Update</th>
 
@@ -76,19 +76,24 @@
               <td>{{this.deliveryDetails.Name}}</td>
               <td>{{this.deliveryDetails.City}}</td>
               <td>{{this.paymentMethod}}</td>
-              <td>{{this.totalAmount}}</td>
+              <td>Rs. {{this.totalAmount}}</td>
               <td>{{this.status}}</td>
-              <td>{{this.date}}</td>
-
-              <td><a href="/admin/edit-product?id={{this._id}}"> <select class="form-select" name="Status"
-                    id="Status" area-label="Default select example">
+              {{!-- <td>{{this.date}}</td> --}}
+              <form action="/admin/view-orders/{{this._id}}" method="post">
+                <td>
+                  <select class="form-select" name="status" id="status" area-label="">
                     <option value="{{this.status}}">{{this.status}}</option>
                     <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
                     <option value="returned">Returned</option>
-                  </select></a></td>
-              <td><a href="/admin/delete-product/{{this._id}}"><button class="btn btn-danger"
-                    onclick="">UPDATE</button></a></td>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </td>
+                {{#if this.FinalStatus}}
+                <td><button class="btn btn-danger" type="submit" disabled>UPDATE</button></td>
+                {{else}}
+                <td><button class="btn btn-danger" type="submit">UPDATE</button></td>
+                {{/if}}
+              </form>
             </tr>
             {{/each}}
             </tfoot>

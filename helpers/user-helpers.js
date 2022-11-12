@@ -363,6 +363,7 @@ module.exports = {
         totalAmount: total,
         status: status,
         date: new Date(),
+        FinalStatus: false
       };
 
       db.get()
@@ -439,7 +440,7 @@ module.exports = {
         .collection(collection.ORDER_COLLECTION)
         .updateOne(
           { _id: objectId(orderId) },
-          { $set: { status: "cancelled" } }
+          { $set: { status: "cancelled", FinalStatus: true  } }
         )
         .then((response) => {
           resolve(response);
@@ -491,4 +492,11 @@ module.exports = {
         });
     });
   },
+  redeemCode: (couponCode) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.COUPON_COLLECTION).findOne({Coupon: couponCode}).then((response) => {
+        resolve(response)
+      })
+    })
+  }
 };

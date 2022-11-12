@@ -7,6 +7,10 @@
 				<div class="col-md-4 checkout-left-basket">
 					<h4>Amount to be paid</h4>
 					<ul>
+						<form action="/redeem-code" method="post">
+							<input class="form-control" type="text" placeholder="ENTER COUPON CODE" name="Coupon">
+							<button type="submit" class="btn btn-danger" style="background: rgb(150, 150, 235); margin-top: 15px; margin-bottom: 15px;">REDEEM CODE</button>
+						</form>
 						{{#each products}}
 						<li>Product{{@index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
 						{{/each}}
@@ -15,8 +19,7 @@
 				</div>
 				<div class="col-md-8 address_form">
 					<h4>Add delivery Details</h4>
-					<form action="" method="post" id="checkout-form"
-						class="creditly-card-form agileinfo_form">
+					<form action="" method="post" id="checkout-form" class="creditly-card-form agileinfo_form">
 						<section class="creditly-wrapper wrapper">
 							<div class="information-wrapper">
 								<div class="first-row form-group">
@@ -106,20 +109,20 @@
 			}
 		};
 		var rzp1 = new Razorpay(options);
-		    rzp1.open();
+		rzp1.open();
 	}
-	function verifyPayment(payment, order){
+	function verifyPayment(payment, order) {
 		$.ajax({
 			url: '/verify-payment',
 			data: {
 				payment,
 				order
-			}, 
+			},
 			method: 'post',
 			success: (response) => {
-				if(response.status){
+				if (response.status) {
 					location.href = '/order-successful'
-				}else{
+				} else {
 					alert("Payment failed")
 				}
 			}

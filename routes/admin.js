@@ -79,18 +79,10 @@ router.get("/add-product", function (req, res) {
 });
 
 router.post("/add-product", (req, res) => {
-//   console.log(req.body.Price)
-
-//   const number = req.body.Price
-//   const num = parseInt(number)
-//  Number.isInteger(num)
-//   const cartobj = {
-//     Name: req.body.Name,
-//     Category: req.body.Category,
-//     Price: num,
-//     Description: req.body.Description
-//   }
-//   console.log(cartobj);
+  const discount = req.body.actualPrice * req.body.Offer / 100
+  const Price = req.body.actualPrice - discount
+  req.body.Price = Price.toFixed();
+  req.body.Sales = 0
   productHelpers.addProduct(req.body, (id) => {
     let image = req.files.Image;
     console.log(id);
@@ -122,6 +114,12 @@ router.get("/edit-product", async (req, res) => {
 
 router.post("/edit-product/:id", (req, res) => {
   let id = req.params.id;
+
+  const discount = req.body.actualPrice * req.body.Offer / 100
+  const Price = req.body.actualPrice - discount
+  req.body.Price = Price.toFixed();
+  console.log(Price);
+
   productHelpers.updateProduct(req.params.id, req.body).then(() => {
     res.redirect("/admin/view-products");
     if (req.files) {
@@ -161,6 +159,32 @@ router.get('/delete-category/:id', (req, res) => {
 router.get('/view-orders', (req, res) => {
   productHelpers.getAllOrders().then((orders) => {
     res.render('admin/view-orders', {admin: true, orders, layout: 'adminLayout.hbs'})
+  })
+})
+
+router.post('/view-orders/:id', (req, res) => {
+  const orderId = req.params.id;
+  productHelpers.updateOrderStatus(orderId, req.body).then((response) => {
+    res.redirect('/admin/view-orders');
+  })
+})
+
+router.get('/add-coupons', (req, res) => {
+  productHelpers.getAllCoupons().then((allCoupons) => {
+    res.render('admin/add-coupons', {admin: true, allCoupons, layout: 'adminLayout.hbs'})
+  })
+})
+
+router.post('/add-coupons', (req, res) => {
+  productHelpers.addCoupon(req.body).then((response) => {
+    res.redirect('/admin/add-coupons')
+  })
+})
+
+router.get('/delete-coupon/:id', (req, res) => {
+  const couponId = req.params.id
+  productHelpers.deleteCoupon(couponId).then((response) => {
+    res.redirect('/admin/add-coupons')
   })
 })
 

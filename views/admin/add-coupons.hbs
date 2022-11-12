@@ -7,10 +7,10 @@
     <div class="container-fluid py-1 px-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
-          <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Category Management</li>
+          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="">Admin</a></li>
+          <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Coupon Management</li>
         </ol>
-        <h6 class="font-weight-bolder mb-0">List of all categories</h6>
+        <h6 class="font-weight-bolder mb-0">List of all coupons</h6>
       </nav>
       <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
         <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -40,7 +40,7 @@
         <div class="card my-4">
           <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
             <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-              <h6 class="text-white text-capitalize ps-3">CATEGORY MANAGEMENT</h6>
+              <h6 class="text-white text-capitalize ps-3">COUPON MANAGEMENT</h6>
             </div>
           </div>
         </div>
@@ -49,37 +49,49 @@
   </div>
 
 
-    <div class="container">
-        <div class="col-md-12 m-auto">
-            <div class="container">
-                <form action="/admin/add-categories" method="post">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <input type="text" class="form-control" name="Category" placeholder="Enter category name">
-                    </div>
-                    <button type="submit" class="btn btn-primary float-right m-4">ADD CATEGORY</button>
-                </form>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="text-center">Add Coupon</h2>
+                    <form action="/admin/add-coupons" method="post" enctype="multipart/form-data">
+                        <label for="">Coupon Code</label>
+                        <input type="text" name="Coupon" class="form-control">
+
+                        <label for="">Minimum Price to apply the offer</label>
+                        <input type="number" name="MinPrice" class="form-control">
+
+                        <label for="">Discount</label>
+                        <input type="number" name="Discount" class="form-control">
+
+                        <button type="submit" class="btn btn-success mt-4">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
-    {{#if categories}}
+
+
+
+    {{#if allCoupons}}
     <div class="container">
-        <table id="categories" class="table mt-5">
+        <table id="coupon" class="table mt-5">
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Name of category</th>
+                    <th scope="col">Coupon code</th>
+                    <th scope="col">Minimum Price</th>
+                    <th scope="col">Discount</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each categories}}
+                {{#each allCoupons}}
                 <tr>
                     <th scope="row">{{@index}}</th>
-                    <td>{{this.Category}}</td>
-                    <td><a href="/admin/delete-category/{{this._id}}"><button class="btn btn-danger"
-                                onclick="return confirm('Do you want to delete {{this.Category}}?')">DELETE</button></a>
+                    <td>{{this.Coupon}}</td>
+                    <td>{{this.MinPrice}}</td>
+                    <td>{{this.Discount}}</td>
+                    <td><a href="/admin/delete-coupon/{{this._id}}"><button class="btn btn-danger"
+                                onclick="return confirm('Do you want to delete {{this.allCoupons}}?')">DELETE</button></a>
                     </td>
                 </tr>
                 {{/each}}
@@ -88,14 +100,14 @@
     </div>
     {{else}}
     <div class="justify-content-center">
-        <h3 class="">PLEASE ADD CATEGORIES TO DISPLAY</h3>
+        <h3 class="">PLEASE ADD COUPONS TO DISPLAY</h3>
     </div>
     {{/if}}
 
 
       <script>
     $(document).ready(function () {
-      $('#categories').DataTable({
+      $('#coupon').DataTable({
         dom: 'Bfrtip',
         buttons: [
           'copy', 'csv', 'excel', 'pdf', 'print'

@@ -25,8 +25,9 @@
 			</div>
 			<div class="col-md-8 single-right-left simpleCart_shelfItem">
 				<h3>{{product.Name}}</h3>
-				<p><span class="item_price">{{product.Price}}</span>
-					<del>$1,199</del>
+				<p><span class="item_price">Rs. {{product.Price}}</span>
+					<del>{{product.actualPrice}}</del>
+					<p>{{product.Offer}}%off</p>
 				</p>
 				<div class="rating1">
 					<ul class="stars">

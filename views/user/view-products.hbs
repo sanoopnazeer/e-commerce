@@ -1,5 +1,3 @@
-
-
 <!-- top Products -->
 <section class="shopnow" id="shopnow">
 	<div class="ads-grid_shop">
@@ -221,7 +219,8 @@
 										<img src="/product-images/{{this._id}}.jpg" alt="">
 										<div class="men-cart-pro">
 											<div class="inner-men-cart-pro">
-												<a href="/single?id={{this._id}}" class="link-product-add-cart">Quick View</a>
+												<a href="/single?id={{this._id}}" class="link-product-add-cart">Quick
+													View</a>
 											</div>
 										</div>
 										<span class="product-new-top">New</span>
@@ -234,7 +233,11 @@
 											<div class="grid_meta">
 												<div class="product_price">
 													<div class="grid-price ">
-														<span class="money ">Rs. {{this.Price}}</span>
+														<span class="money ">Rs.
+															{{this.Price}}</span><del>{{this.actualPrice}}</del>
+														
+
+
 													</div>
 												</div>
 												<ul class="stars">
@@ -251,8 +254,9 @@
 												</ul>
 											</div>
 											<div class="shoe single-item hvr-outline-out">
-												<button type="submit" onclick="addToCart('{{this._id}}')" class="shoe-cart pshoe-cart"><i
-														class="fa fa-cart-plus" aria-hidden="true"></i></button>
+												<button type="submit" onclick="addToCart('{{this._id}}')"
+													class="shoe-cart pshoe-cart"><i class="fa fa-cart-plus"
+														aria-hidden="true"></i></button>
 											</div>
 										</div>
 										<div class="clearfix"></div>

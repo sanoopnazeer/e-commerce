@@ -27,13 +27,20 @@
                         <td>{{this.paymentMethod}}</td>
                         <td>Rs. {{this.totalAmount}}</td>
                         <td>{{this.status}}</td>
-                        <td><a href="/view-ordered-items?id={{this._id}}"><button
-                                    class="btn btn-success">VIEW PRODUCTS</button></a></td>
+                        <td><a href="/view-ordered-items?id={{this._id}}"><button class="btn btn-success">VIEW
+                                    PRODUCTS</button></a></td>
                         </td>
+                        {{#if FinalStatus}}
                         <td>
-                            <a href="/cancel-order/{{this._id}}"><button
-                                    class="btn btn-danger">CANCEL ORDER</button></a>
+                            <a href="/cancel-order/{{this._id}}"><button class="btn btn-danger" disabled>CANCEL
+                                    ORDER</button></a>
                         </td>
+                        {{else}}
+                        <td>
+                            <a href="/cancel-order/{{this._id}}"><button class="btn btn-danger">CANCEL
+                                    ORDER</button></a>
+                        </td>
+                        {{/if}}
                     </tr>
                     {{/each}}
                     </tfoot>
