@@ -7,14 +7,29 @@
 				<div class="col-md-4 checkout-left-basket">
 					<h4>Amount to be paid</h4>
 					<ul>
-						<form action="/redeem-code" method="post">
-							<input class="form-control" type="text" placeholder="ENTER COUPON CODE" name="Coupon">
-							<button type="submit" class="btn btn-danger" style="background: rgb(150, 150, 235); margin-top: 15px; margin-bottom: 15px;">REDEEM CODE</button>
+						<form action="#" method="post" id="redeem-code">
+							<select class="form-control" name="Coupon" id="Coupon">
+								<option value="" disabled selected hidden>ENTER COUPON CODE</option>
+								{{#each coupons}}
+								<option value="{{this.Coupon}}">{{this.Coupon}}</option>
+								{{/each}}
+							</select>
+							<input type="text" name="userId" id="" value="{{user._id}}" hidden>
+
+							<div>
+								<p><span id="errMsg"></span><span id="MinPrice"></span></p>
+							</div>
+
+							<button type="submit" class="btn btn-danger"
+								style="background: rgb(150, 150, 235); margin-top: 15px; margin-bottom: 15px;">REDEEM
+								CODE</button>
 						</form>
 						{{#each products}}
 						<li>Product{{@index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
 						{{/each}}
-						<li>Total <i>-</i> <span>Rs. <span id="total">{{total}}</span></span></li>
+						<li>Sub total <i>-</i> <span>Rs. <span id="subTotal">{{subTotal}}</span></span></li>
+						<li>Discount applied <i>-</i> <span>Rs. <span id="discount">0</span></span></li>
+						<li>Total <i>-</i> <span>Rs. <span id="total">{{subTotal}}</span></span></li>
 					</ul>
 				</div>
 				<div class="col-md-8 address_form">
@@ -83,7 +98,6 @@
 	})
 
 	function razorpayPayment(order) {
-		console.log("inside payment")
 		var options = {
 			"key": "rzp_test_tofGvmp2BOkbs9", // Enter the Key ID generated from the Dashboard
 			"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -129,4 +143,25 @@
 		})
 	}
 
+</script>
+
+
+<script>
+	$("#redeem-code").submit((e) => {
+		e.preventDefault()
+		$.ajax({
+			url: '/redeem-code',
+			method: 'post',
+			data: $('#redeem-code').serialize(),
+			success: (response) => {
+				if (response.status) {
+					document.getElementById('discount').innerHTML = response.discount
+					document.getElementById('total').innerHTML = response.discountPrice
+				}else{
+					document.getElementById('MinPrice').innerHTML = response.MinPrice
+					document.getElementById('errMsg').innerHTML = response.errMsg
+				}
+			}
+		})
+	})
 </script>

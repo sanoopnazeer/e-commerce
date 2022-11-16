@@ -494,7 +494,7 @@ module.exports = {
   },
   redeemCode: (couponCode) => {
     return new Promise((resolve, reject) => {
-      db.get().collection(collection.COUPON_COLLECTION).findOne({Coupon: couponCode}).then((response) => {
+      db.get().collection(collection.COUPON_COLLECTION).findOne({Coupon: couponCode.Coupon}).then((response) => {
         resolve(response)
       })
     })

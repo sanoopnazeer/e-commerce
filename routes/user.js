@@ -173,23 +173,36 @@ router.post("/remove-item", (req, res) => {
 router.get("/place-order", async (req, res) => {
   let user = req.session.user;
   cartCount = await userHelpers.getCartCount(req.session.user._id);
-  let total = await userHelpers.getTotalAmount(req.session.user._id);
+  let subTotal = await userHelpers.getTotalAmount(req.session.user._id);
   let products = await userHelpers.getCartProducts(req.session.user._id);
-  res.render("user/place-order", { user, cartCount, total, products });
+  const coupons = await productHelpers.getAllCoupons()
+  res.render("user/place-order", { user, cartCount, subTotal, products, coupons });
 });
 
 router.post("/place-order", async (req, res) => {
   let products = await userHelpers.getCartProductList(req.body.userId);
   let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
-  userHelpers.placeOrder(req.body, products, totalPrice).then((orderId) => {
-    if (req.body["payment-method"] === "COD") {
-      res.json({ codSuccess: true });
-    } else {
-      userHelpers.generateRazorpay(orderId, totalPrice).then((response) => {
-        res.json(response);
-      });
-    }
-  });
+  if(discountPrice > 0){
+    userHelpers.placeOrder(req.body, products, discountPrice).then((orderId) => {
+      if (req.body["payment-method"] === "COD") {
+        res.json({ codSuccess: true });
+      } else {
+        userHelpers.generateRazorpay(orderId, discountPrice).then((response) => {
+          res.json(response);
+        });
+      }
+    });
+  }else{
+    userHelpers.placeOrder(req.body, products, totalPrice).then((orderId) => {
+      if (req.body["payment-method"] === "COD") {
+        res.json({ codSuccess: true });
+      } else {
+        userHelpers.generateRazorpay(orderId, totalPrice).then((response) => {
+          res.json(response);
+        });
+      }
+    });
+  }
 });
 
 router.get("/order-successful", (req, res) => {
@@ -234,10 +247,19 @@ router.post("/verify-payment", (req, res) => {
     });
 });
 
-router.post('/redeem-code', (req, res) => {
-  userHelpers.redeemCode(req.body).then((response) => {
-    
-    res.redirect('/place-order')
+let discountPrice
+router.post('/redeem-code', async(req, res) => {
+  let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
+  const couponCode = req.body
+  userHelpers.redeemCode(couponCode).then((couponDetails) => {
+    let discount = couponDetails.Discount
+    let MinPrice = couponDetails.MinPrice
+    if (totalPrice >= couponDetails.MinPrice){
+      discountPrice = totalPrice - couponDetails.Discount
+      res.json({ status: true, discountPrice, discount})
+    }else{
+      res.json({errMsg: "Minimum purchase should be ", MinPrice})
+    }
   })
 })
 
