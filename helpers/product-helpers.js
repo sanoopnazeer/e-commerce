@@ -6,6 +6,7 @@ const { response } = require("../app");
 
 module.exports = {
   addProduct: (product, callback) => {
+    product.Stock = parseInt(product.Stock)
     console.log(product);
     db.get()
       .collection("product")
@@ -46,6 +47,7 @@ module.exports = {
   },
   updateProduct: (proId, proDetails) => {
     return new Promise((resolve, reject) => {
+      proDetails.Stock = parseInt(proDetails.Stock)
       db.get()
         .collection(collection.PRODUCTS_COLLECTIONS)
         .updateOne(
@@ -54,11 +56,11 @@ module.exports = {
             $set: {
               Name: proDetails.Name,
               Description: proDetails.Description,
-              Price: proDetails.Price,
+              actualPrice: proDetails.actualPrice,
               Stock: proDetails.Stock,
               Offer: proDetails.Offer,
-              discountPrice: proDetails.discountPrice,
-              Sales: proDetails.Sales,
+              Price: proDetails.Price,
+              // Sales: proDetails.Sales,
               Category: proDetails.Category,
             },
           }
@@ -177,6 +179,39 @@ module.exports = {
         db.get().collection(collection.COUPON_COLLECTION).deleteOne({_id: objectId(couponId)}).then((response) => {
             resolve(response)
         })
+    })
+  },
+  getTotalSalesAmount: () => {
+    return new Promise(async(resolve, reject) => {
+     const totalSalesAmount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([{$group: {_id: null, "Amount": {$sum: "$totalAmount"}}},{$project: {_id:0, "totalAmount": "$Amount"}}]).toArray()
+    resolve(totalSalesAmount[0]?.totalAmount)
+    })
+  },
+  getTotalProducts: () => {
+    return new Promise(async (resolve, reject) => {
+     await db.get().collection(collection.PRODUCTS_COLLECTIONS).count().then((totalProducts) => {
+       resolve(totalProducts)
+     })
+    })
+  },
+  getOrderDates: () => {
+    return new Promise(async (resolve, reject) => {
+      const orderDates = await db.get().collection(collection.ORDER_COLLECTION).aggregate([{$project: {_id: 0, date: 1}}]).toArray()
+      timeOfSale = []
+      for(let orderDate of orderDates){
+        timeOfSale.push(orderDate.date.toISOString().substring(0, 10))
+      }
+      resolve(timeOfSale)
+    })
+  },
+  getTotalAmount: () => {
+    return new Promise(async (resolve, reject) => {
+      const orderAmount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([{$project: {_id: 0, totalAmount: 1}}]).toArray()
+      amountOfSale = []
+      for(let amount of orderAmount){
+        amountOfSale.push(amount.totalAmount)
+      };
+      resolve(amountOfSale)
     })
   }
 };

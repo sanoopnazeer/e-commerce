@@ -1,33 +1,3 @@
-{{!-- <div class="container">
-
-    <div class="d-flex justify-content-center">
-        <h3 class="">Admin Homepage</h3>
-    </div>
-    <div class="d-flex justify-content-end">
-        <form action="/admin/adminLogout" method="post" class="">
-            <button type="submit" class="btn btn-primary">Logout</button>
-        </form>
-    </div>
-
-    <div class="alert alert-primary" role="alert">
-        <a href="">DASHBOARD</a>
-    </div>
-    <div class="alert alert-primary" role="alert">
-        <a href="/admin/view-products">PRODUCT MANAGEMENT</a>
-    </div>
-    <div class="alert alert-primary" role="alert">
-        <a href="/admin/view-users">USER MANAGEMENT</a>
-    </div>
-    <div class="alert alert-primary" role="alert">
-        <a href="/admin/add-categories">CATEGORY MANAGEMENT</a>
-    </div>
-    <div class="alert alert-primary" role="alert">
-        <a href="/admin/allOrders">ORDER MANAGEMENT</a>
-    </div>
-
-    --}}
-
-
 
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <!-- Navbar -->
@@ -36,28 +6,12 @@
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a>
                         </li>
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
                     </ol>
                     <h6 class="font-weight-bolder mb-0">Dashboard</h6>
                 </nav>
-                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group input-group-outline">
-                            <label class="form-label">Type here...</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <ul class="navbar-nav  justify-content-end">
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
-                                <i class="fa fa-user me-sm-1"></i>
-                                <span class="d-sm-inline d-none">Sign In</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </nav>
         <!-- End Navbar -->
@@ -71,8 +25,8 @@
                                 <i class="material-icons opacity-10">weekend</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Today's Money</p>
-                                <h4 class="mb-0">$53k</h4>
+                                <p class="text-sm mb-0 text-capitalize">Sales</p>
+                                <h4 class="mb-0">Rs. {{totalSalesAmount}}</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
@@ -90,8 +44,8 @@
                                 <i class="material-icons opacity-10">person</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Today's Users</p>
-                                <h4 class="mb-0">2,300</h4>
+                                <p class="text-sm mb-0 text-capitalize">Total Users</p>
+                                <h4 class="mb-0">{{totalUsers}}</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
@@ -109,8 +63,8 @@
                                 <i class="material-icons opacity-10">person</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">New Clients</p>
-                                <h4 class="mb-0">3,462</h4>
+                                <p class="text-sm mb-0 text-capitalize">Total Orders</p>
+                                <h4 class="mb-0">{{totalOrders}}</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
@@ -128,8 +82,8 @@
                                 <i class="material-icons opacity-10">weekend</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Sales</p>
-                                <h4 class="mb-0">$103,430</h4>
+                                <p class="text-sm mb-0 text-capitalize">Total Products</p>
+                                <h4 class="mb-0">{{totalProducts}}</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
@@ -139,8 +93,128 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="mt-4" id="myPlot" style="width:100%; max-width:1000px;"></div>
+
             </div>
-        </div>    
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="sales-report" class="display nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Actual Price</th>
+                                <th>Offer</th>
+                                <th>Discount Price</th>
+                                <th>Stock</th>
+                                <th>Sales</th>
+                                <th>Image</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each products}}
+                            <tr>
+                                <td>{{@index}}</td>
+                                <td>{{this.Name}}</td>
+                                <td>{{this.Category}}</td>
+                                <td>{{this.actualPrice}}</td>
+                                <td>{{this.Offer}}%</td>
+                                <td>{{this.Price}}</td>
+                                <td>{{this.Stock}}</td>
+                                <td>{{this.Sales}}</td>
+                                <td><img style="width: 50px;height: 50px" src="/product-images/{{this._id}}.jpg" alt="">
+                                </td>
+                            </tr>
+                            {{/each}}
+                            </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+<div class="timeOfSale d-none">{{ timeOfSale }} {{amountOfSale}}</div>
     </main>
 
-    
+
+
+
+
+    {{!-- <script>
+        var xArray = ["Italy", "France", "Spain", "USA", "Argentina"];
+        var yArray = [55, 49, 44, 24, 15];
+
+        var data = [{
+            x: xArray,
+            y: yArray,
+            type: "bar"
+        }];
+
+        var layout = { title: "SALES REPORT" };
+
+        Plotly.newPlot("myPlot", data, layout);
+    </script> --}}
+
+
+    <script>
+        $(document).ready(function () {
+            $('#sales-report').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    </script>
+
+
+    <script>
+        console.log({{ timeOfSale }})
+        let timeOfSale = document.querySelector(".timeOfSale").innerHTML;
+        console.log(timeOfSale)
+        let xArray = timeOfSale.split(',')
+        console.log(typeof xArray[0])
+        console.log(xArray)
+        let yArray = [{{ amountOfSale }}];
+        console.log(yArray)
+        // Define Data
+        let data = [{
+            x: xArray,
+            y: yArray,
+            mode: "markers",
+            type: "scatter"
+        }];
+        let barData = [{
+            x: xArray,
+            y: yArray,
+            mode: "lines",
+            type: "bar"
+        }];
+        // Define Layout
+        let layout = {
+            xaxis: {
+                type: 'date'
+            },
+            yaxis: {
+                title: "Sales"
+            },
+            title: "Revenue per day"
+        };
+        let barLayout = {
+            xaxis: {
+                type: 'date'
+            },
+            yaxis: {
+                title: "Sales"
+            },
+            title: "Sales"
+        };
+        // Display using Plotly
+        Plotly.newPlot("myPlot", data, layout);
+        Plotly.newPlot("myBar", barData, barLayout);
+    </script>

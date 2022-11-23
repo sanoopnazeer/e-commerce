@@ -17,7 +17,9 @@
 							<input type="text" name="userId" id="" value="{{user._id}}" hidden>
 
 							<div>
-								<p><span id="errMsg"></span><span id="MinPrice"></span></p>
+
+								<p><span id="errMsg"></span></p>
+
 							</div>
 
 							<button type="submit" class="btn btn-danger"
@@ -32,30 +34,73 @@
 						<li>Total <i>-</i> <span>Rs. <span id="total">{{subTotal}}</span></span></li>
 					</ul>
 				</div>
+
+
 				<div class="col-md-8 address_form">
-					<h4>Add delivery Details</h4>
+					<h4>Select delivery details</h4>
+					{{!-- <form action="" method="post" id="saved-address" class="creditly-card-form agileinfo_form"> --}}
+
+						{{#if userDetails}}
+						<div class="dropdown">
+							<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+								aria-expanded="false">
+								Choose Address
+							</button>
+
+							<div class="dropdown-menu">
+								{{#each userDetails}}
+									<div
+										onclick="chooseAddress('{{this.Name}}','{{this.Mobile}}','{{this.Landmark}}','{{this.City}}','{{this.Pincode}}')">
+										{{!-- <button class="dropdown-item" type="button"> --}}
+											Name: {{this.Name}}, Mobile: {{this.Mobile}}, Landmark: {{this.Landmark}}, City: {{this.City}}, Pincode: {{this.Pincode}}
+										{{!-- </button> --}}
+									</div>
+									{{/each}}
+							</div>
+
+						</div>
+						{{/if}}
+						<br>
+					{{!-- </form> --}}
+
 					<form action="" method="post" id="checkout-form" class="creditly-card-form agileinfo_form">
 						<section class="creditly-wrapper wrapper">
 							<div class="information-wrapper">
 								<div class="first-row form-group">
+
+									<h4>Add new address</h4>
 									<div class="controls">
 										<label class="control-label">Full name: </label>
-										<input class="billing-address-name form-control" type="text" name="Name"
-											placeholder="Full name">
+										<input class="billing-address-name form-control" type="text" id="Name"
+											name="Name" placeholder="Full name">
 									</div>
 									<div class="card_number_grids">
 										<div class="card_number_grid_left">
 											<div class="controls">
 												<label class="control-label">Mobile number:</label>
 												<input class="form-control" type="text" placeholder="Mobile number"
-													name="Mobile">
+													id="Mobile" name="Mobile">
 											</div>
 										</div>
+										<div class="card_number_grid_right">
+											<div class="controls">
+												<label class="control-label">Landmark: </label>
+												<input class="form-control" type="text" placeholder="Landmark"
+													id="Landmark" name="Landmark">
+											</div>
+										</div>
+										<div class="clear"> </div>
 									</div>
 									<div class="controls">
 										<label class="control-label">Town/City: </label>
-										<input class="form-control" type="text" placeholder="Town/City" name="City">
+										<input class="form-control" type="text" placeholder="Town/City" id="City"
+											name="City">
 										<input type="text" name="userId" id="" value="{{user._id}}" hidden>
+									</div>
+									<div class="controls">
+										<label class="control-label">Pincode:</label>
+										<input class="form-control" type="text" placeholder="Pincode" id="Pincode"
+											name="Pincode">
 									</div>
 									<div class="controls">
 										<label class="control-label">Payment Method</label>
@@ -157,11 +202,25 @@
 				if (response.status) {
 					document.getElementById('discount').innerHTML = response.discount
 					document.getElementById('total').innerHTML = response.discountPrice
-				}else{
-					document.getElementById('MinPrice').innerHTML = response.MinPrice
 					document.getElementById('errMsg').innerHTML = response.errMsg
+				} else {
+					document.getElementById('errMsg').innerHTML = response.errMsg
+					document.getElementById('MinPrice').innerHTML = response.MinPrice
 				}
 			}
 		})
 	})
 </script>
+
+
+<script>
+	function chooseAddress(Name, Mobile, Landmark, City, Pincode) {
+		console.log(Name, Mobile, Landmark, City, Pincode)
+		document.getElementById('Name').value = Name
+		document.getElementById('Mobile').value = Mobile
+		document.getElementById('Landmark').value = Landmark
+		document.getElementById('City').value = City
+		document.getElementById('Pincode').value = Pincode
+	}
+</script>
+

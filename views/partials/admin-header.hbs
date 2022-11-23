@@ -1,41 +1,3 @@
-{{!-- <header>
-	<!-- banner -->
-	<div class="banner_top innerpage" id="home">
-		<div class="wrapper_top_w3layouts">
-			<div class="header_agileits">
-				<div class="logo inner_page_log">
-					<h2><a class="navbar-brand" style="opacity: 0.5;" href="index.html"><span>Downy Shoes - Admin
-								Page</span></a></h2>
-				</div>
-				<div class="overlay overlay-contentpush">
-					<button type="button" class="overlay-close"><i class="fa fa-times" aria-hidden="true"></i></button>
-
-					<nav>
-						<ul>
-							<li><a href="index.html" class="active">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</nav>
-				</div>
-				<div class="mobile-nav-button">
-					<button id="trigger-overlay" type="button"><i class="fa fa-bars" aria-hidden="true"></i></button>
-				</div>
-
-				<!-- /banner_inner -->
-				<div class="services-breadcrumb_w3ls_agileinfo">
-					<div class="inner_breadcrumb_agileits_w3">
-
-						<ul class="short">
-							<li><a href="/views/admin/view-products.hbs">Home</a><i>|</i></li>
-							<li>About</li>
-						</ul>
-					</div>
-				</div>
-				<!-- //banner_inner -->
-			</div>
-</header> --}}
-
 
 <body class="g-sidenav-show  bg-gray-200">
 	<aside
@@ -44,8 +6,7 @@
 		<div class="sidenav-header">
 			<i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
 				aria-hidden="true" id="iconSidenav"></i>
-			<a class="navbar-brand m-0" href=""
-				target="_blank">
+			<a class="navbar-brand m-0" href="" target="_blank">
 				<img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
 				<span class="ms-1 font-weight-bold text-white">ADMIN PANEL</span>
 			</a>
@@ -54,7 +15,7 @@
 		<div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link text-white active bg-gradient-primary" href="/admin/adminLogin">
+					<a class="nav-link text-white active bg-gradient-primary" href="/admin/adminHome">
 						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="material-icons opacity-10">dashboard</i>
 						</div>
@@ -106,23 +67,33 @@
 					</h6>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link text-white " href="../pages/profile.html">
-						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-							<i class="material-icons opacity-10">person</i>
-						</div>
-						<span class="nav-link-text ms-1">Profile</span>
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link text-white " href="/admin">
+					{{#if admin}}
+					<a class="nav-link text-white ">
 						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="material-icons opacity-10">login</i>
 						</div>
-						<span class="nav-link-text ms-1">Sign In</span>
+						<span class="nav-link-text ms-1">{{admin.Name}}</span>
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link text-white " href="/adminSignup">
+					<a class="nav-link text-white " href="/admin/adminLogout">
+						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="material-icons opacity-10">logout</i>
+						</div>
+						<span class="nav-link-text ms-1">Logout</span>
+					</a>
+				</li>
+				{{else}}
+				<a class="nav-link text-white " href="/admin">
+					<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="material-icons opacity-10">login</i>
+					</div>
+					<span class="nav-link-text ms-1">Sign In</span>
+				</a>
+				{{/if}}
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white " href="/admin/adminSignup">
 						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="material-icons opacity-10">assignment</i>
 						</div>

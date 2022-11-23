@@ -145,7 +145,7 @@ router.get("/single", async (req, res) => {
     let product = await productHelpers.getProductDetails(proId);
     res.render("user/single", { product });
   } catch (err) {
-    res.render("user/error", {title: "Page Not found", layout: false});
+    res.render("user/error", { title: "Page Not found", layout: false });
   }
 });
 
@@ -175,25 +175,37 @@ router.get("/place-order", async (req, res) => {
   cartCount = await userHelpers.getCartCount(req.session.user._id);
   let subTotal = await userHelpers.getTotalAmount(req.session.user._id);
   let products = await userHelpers.getCartProducts(req.session.user._id);
-  const coupons = await productHelpers.getAllCoupons()
-  res.render("user/place-order", { user, cartCount, subTotal, products, coupons });
+  const coupons = await productHelpers.getAllCoupons();
+  const userDetails = await userHelpers.getUserDetails(user);
+  console.log(userDetails);
+  res.render("user/place-order", {
+    user,
+    cartCount,
+    subTotal,
+    products,
+    coupons,
+    userDetails : userDetails.address,
+  });
 });
 
 router.post("/place-order", async (req, res) => {
   let products = await userHelpers.getCartProductList(req.body.userId);
   let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
-  if(discountPrice > 0){
+  if (discountPrice > 0) {
     userHelpers.placeOrder(req.body, products, discountPrice).then((orderId) => {
-      if (req.body["payment-method"] === "COD") {
-        res.json({ codSuccess: true });
-      } else {
-        userHelpers.generateRazorpay(orderId, discountPrice).then((response) => {
-          res.json(response);
-        });
-      }
-    });
-  }else{
+      userHelpers.useCoupon(req.body.userId, couponCode)
+      userHelpers.updateSales(products)
+        if (req.body["payment-method"] === "COD") {
+          res.json({ codSuccess: true });
+        } else {
+          userHelpers.generateRazorpay(orderId, discountPrice).then((response) => {
+              res.json(response);
+            });
+        }
+      });
+  } else {
     userHelpers.placeOrder(req.body, products, totalPrice).then((orderId) => {
+      userHelpers.updateSales(products)
       if (req.body["payment-method"] === "COD") {
         res.json({ codSuccess: true });
       } else {
@@ -247,20 +259,51 @@ router.post("/verify-payment", (req, res) => {
     });
 });
 
-let discountPrice
-router.post('/redeem-code', async(req, res) => {
+let discountPrice;
+let couponCode;
+router.post("/redeem-code", async (req, res) => {
+  const userId = req.body.userId;
   let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
-  const couponCode = req.body
+  couponCode = req.body;
   userHelpers.redeemCode(couponCode).then((couponDetails) => {
-    let discount = couponDetails.Discount
-    let MinPrice = couponDetails.MinPrice
-    if (totalPrice >= couponDetails.MinPrice){
-      discountPrice = totalPrice - couponDetails.Discount
-      res.json({ status: true, discountPrice, discount})
-    }else{
-      res.json({errMsg: "Minimum purchase should be ", MinPrice})
+    if (couponDetails.usedBy) {
+      for (i = 0; i < couponDetails.usedBy.length; i++) {
+        if (couponDetails.usedBy == userId) {
+          res.json({ errMsg: "This coupon is already used" });
+        }
+      }
+    } else {
+      let discount = couponDetails.Discount;
+      let MinPrice = couponDetails.MinPrice;
+      if (totalPrice >= couponDetails.MinPrice) {
+        discountPrice = totalPrice - couponDetails.Discount;
+        res.json({ status: true, discountPrice, discount, errMsg: "Discount applied"});
+      } else {
+        res.json({ errMsg: "Purchase more to apply coupon"});
+      }
     }
-  })
-})
+  });
+});
+
+router.get("/view-profile", async (req, res) => {
+  const user = req.session.user;
+  const userDetails = await userHelpers.getUserDetails(user);
+  res.render("user/view-profile", { user, userDetails });
+});
+
+router.post("/add-address", (req, res) => {
+  const user = req.session.user;
+  userHelpers.addNewAddress(req.body, user).then((response) => {
+    res.redirect("/view-profile");
+  });
+});
+
+router.post("/select-address", (req, res) => {
+  const address = req.body;
+  console.log("before true");
+  console.log(response);
+  console.log(address);
+  res.json(response);
+});
 
 module.exports = router;

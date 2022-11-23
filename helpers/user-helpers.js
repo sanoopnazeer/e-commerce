@@ -180,7 +180,7 @@ module.exports = {
               }
             )
             .then((response) => {
-              resolve();
+              resolve();  
             });
         }
       } else {
@@ -349,13 +349,18 @@ module.exports = {
   },
   placeOrder: (order, products, total) => {
     return new Promise((resolve, reject) => {
-      console.log(order, products, total);
+      // let d = new Date().toString()
+      // let index = d.lastIndexOf(":")+3
+      // let date = (d.substring(0, index))
+
       let status = order["payment-method"] === "COD" ? "placed" : "pending";
       let orderObj = {
         deliveryDetails: {
           Name: order.Name,
           Mobile: order.Mobile,
+          Landmark: order.Landmark,
           City: order.City,
+          Pincode: order.Pincode,
         },
         userId: objectId(order.userId),
         paymentMethod: order["payment-method"],
@@ -363,8 +368,18 @@ module.exports = {
         totalAmount: total,
         status: status,
         date: new Date(),
-        FinalStatus: false
+        FinalStatus: false,
       };
+
+      // db.get()
+      //   .collection(collection.USER_COLLECTION)
+      //   .updateOne(
+      //     { _id: objectId(order.userId) },
+      //     { $push: { address: orderObj.deliveryDetails } }
+      //   )
+      //   .then((response) => {
+      //     resolve();
+      //   });
 
       db.get()
         .collection(collection.ORDER_COLLECTION)
@@ -440,7 +455,7 @@ module.exports = {
         .collection(collection.ORDER_COLLECTION)
         .updateOne(
           { _id: objectId(orderId) },
-          { $set: { status: "cancelled", FinalStatus: true  } }
+          { $set: { status: "cancelled", FinalStatus: true } }
         )
         .then((response) => {
           resolve(response);
@@ -450,7 +465,7 @@ module.exports = {
   generateRazorpay: (orderId, total) => {
     return new Promise((resolve, reject) => {
       var options = {
-        amount: total*100,
+        amount: total * 100,
         currency: "INR",
         receipt: "" + orderId,
       };
@@ -494,9 +509,63 @@ module.exports = {
   },
   redeemCode: (couponCode) => {
     return new Promise((resolve, reject) => {
-      db.get().collection(collection.COUPON_COLLECTION).findOne({Coupon: couponCode.Coupon}).then((response) => {
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .findOne({ Coupon: couponCode.Coupon })
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+  useCoupon: (userId, couponCode) => {
+    return new Promise((resolve, reject) => {
+      console.log(couponCode);
+      db.get().collection(collection.COUPON_COLLECTION).updateOne({ Coupon: couponCode.Coupon}, {$push: {usedBy: objectId(userId)}})
+    })
+  },
+  getUserDetails: (user) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ _id: objectId(user._id) })
+        .then((userDetails) => {
+          resolve(userDetails);
+        });
+    });
+  },
+  addNewAddress: (addressData, user) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .updateOne(
+          { _id: objectId(user._id) },
+          { $push: { address: addressData } }
+        )
+        .then((response) => {
+          resolve();
+        });
+    });
+  },
+  getTotalUsers: () => {
+    return new Promise(async (resolve, reject) => {
+      await db.get().collection(collection.USER_COLLECTION).count().then((response) => {
         resolve(response)
       })
     })
+  },
+  getTotalOrders: () => {
+    return new Promise(async (resolve, reject) => {
+      await db.get().collection(collection.ORDER_COLLECTION).count().then((response) => {
+        resolve(response)
+      })
+    })
+  },
+  updateSales: (products) => {    
+    return new Promise((resolve, reject) => {
+      products.forEach((value, index) => {
+          const proId = products[index].item
+        db.get().collection(collection.PRODUCTS_COLLECTIONS).updateOne({_id: proId}, {$inc: {Sales: value.quantity, Stock: -value.quantity}})
+      })
+    });
   }
 };

@@ -9,7 +9,7 @@
                 <thead>
                     <tr>
                         <th>Sl.No</th>
-                        <th>City</th>
+                        <th>Date</th>
                         <th>Mobile Number</th>
                         <th>Payment Method</th>
                         <th>Total Amount</th>
@@ -22,7 +22,7 @@
                     {{#each allOrders}}
                     <tr>
                         <td>{{@index}}</td>
-                        <td>{{this.deliveryDetails.City}}</td>
+                        <td>{{this.date}}</td>
                         <td>{{this.deliveryDetails.Mobile}}</td>
                         <td>{{this.paymentMethod}}</td>
                         <td>Rs. {{this.totalAmount}}</td>
