@@ -15,13 +15,14 @@ const verifyLogin = (req, res, next) => {
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
+  const userHome = true
   let user = req.session.user;
   let cartCount = null;
   if (req.session.user) {
     cartCount = await userHelpers.getCartCount(req.session.user._id);
   }
   productHelpers.getAllProducts().then((products) => {
-    res.render("user/view-products", { products, user, cartCount });
+    res.render("user/view-products", { products, user, cartCount, userHome });
   });
 });
 

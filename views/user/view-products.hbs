@@ -1,3 +1,139 @@
+{{#if userHome}}
+<!-- banner -->
+<div class="banner_top" id="home">
+	<div class="wrapper_top_w3layouts">
+
+		<div class="header_agileits">
+			<div class="logo inner_page_log">
+				<h1><a class="navbar-brand" href="/"><span>Downy</span> <i>Shoes</i></a></h1>
+			</div>
+			<div class="overlay overlay-contentpush">
+				<button type="button" class="overlay-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+
+				<nav>
+					<ul>
+						{{#if user}}
+						<h1 style="margin-bottom: 70px;">Hi, {{user.Name}}</h1>
+						{{/if}}
+						<li><a href="/" class="active">Home</a></li>
+						<li><a href="/about">About</a></li>
+						<li><a href="/contact">Contact</a></li>
+						{{#if user}}
+						<li><a href="/view-orders">Orders</a></li>
+						<li><a href="/view-profile">Profile</a></li>
+						<li><a href="/logout">Logout</a></li>
+						{{else}}
+						<li><a href="/login">Login</a></li>
+						{{/if}}
+
+
+						{{!-- <li>
+							<div class="dropdown">
+								<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									{{#if user}}
+
+									{{user.Name}}
+									{{else}}
+									Account
+									{{/if}}
+								</button>
+								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+									{{#if user}}
+									<a class="dropdown-item" href="/logout">Logout</a>
+									{{else}}
+									<a class="dropdown-item" href="/login">Login</a>
+									{{/if}}
+								</div>
+							</div>
+						</li> --}}
+
+					</ul>
+				</nav>
+			</div>
+			<div class="mobile-nav-button">
+				<button id="trigger-overlay" type="button"><i class="fa fa-bars" aria-hidden="true"></i></button>
+			</div>
+			<!-- cart details -->
+			<div class="top_nav_right">
+				<div class="shoecart shoecart2 cart cart box_1">
+					<form action="/cart" method="get" class="last">
+						<input type="hidden" name="cmd" value="_cart">
+						<input type="hidden" name="display" value="1">
+						<button class="top_shoe_cart" type="submit" name="submit" value=""><i
+								class="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
+						<span class="badge badge-success" id="cart-count">{{cartCount}}</span>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //cart details -->
+	<div class="clearfix"></div>
+</div>
+
+<!-- /slider -->
+<div class="slider">
+	<div class="callbacks_container">
+		<ul class="rslides callbacks callbacks1" id="slider4">
+			<li>
+				<div class="banner-top1">
+					<div class="banner-info-wthree">
+						<h3>Adidas</h3>
+						<p>For All Walks of Life.</p>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="clearfix"> </div>
+</div>
+<!-- //slider -->
+<ul class="top_icons">
+	<li><a href="#"><span class="fa fa-facebook" aria-hidden="true"></span></a></li>
+	<li><a href="#"><span class="fa fa-twitter" aria-hidden="true"></span></a></li>
+	<li><a href="#"><span class="fa fa-linkedin" aria-hidden="true"></span></a></li>
+	<li><a href="#"><span class="fa fa-google-plus" aria-hidden="true"></span></a></li>
+
+</ul>
+</div>
+</div>
+<!-- //banner -->
+<!-- /girds_bottom-->
+<div class="grids_bottom">
+	<div class="style-grids">
+		<div class="col-md-6 style-grid style-grid-1">
+			<img src="images/b1.jpg" alt="shoe">
+		</div>
+	</div>
+	<div class="col-md-6 style-grid style-grid-2">
+		<div class="style-image-1_info">
+			<div class="style-grid-2-text_info">
+				<h3>Nike DOWNSHIFTER</h3>
+				<p>Itaque earum rerum hic tenetur a sapiente delectus reiciendis maiores alias consequatur.sed quia non
+					numquam eius modi
+					tempora incidunt ut labore et dolore .</p>
+				<div class="shop-button">
+					<a href="#shopnow">Shop Now</a>
+				</div>
+			</div>
+		</div>
+		<div class="style-image-2">
+			<img src="images/b2.jpg" alt="shoe">
+			<div class="style-grid-2-text">
+				<h3>Air force</h3>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+</div>
+<!-- //grids_bottom-->
+{{/if}}
+
+
+
+
 <!-- top Products -->
 <section class="shopnow" id="shopnow">
 	<div class="ads-grid_shop">
@@ -14,18 +150,6 @@
 						<input type="submit" value=" ">
 					</form>
 				</div>
-				<!-- price range -->
-				<div class="range">
-					<h3 class="agileits-sear-head">Price range</h3>
-					<ul class="dropdown-menu6">
-						<li>
-
-							<div id="slider-range"></div>
-							<input type="text" id="amount" style="border: 0; color: #ffffff; font-weight: normal;" />
-						</li>
-					</ul>
-				</div>
-				<!-- //price range -->
 				<!--preference -->
 				<div class="left-side">
 					<h3 class="agileits-sear-head">Occasion</h3>
@@ -140,56 +264,18 @@
 				<!-- deals -->
 				<div class="deal-leftmk left-side">
 					<h3 class="agileits-sear-head">Special Deals</h3>
+					{{#each products}}
 					<div class="special-sec1">
 						<div class="col-xs-4 img-deals">
-							<img src="images/s4.jpg" alt="">
+							<img src="/product-images/{{this._id}}.jpg" alt="">
 						</div>
 						<div class="col-xs-8 img-deal1">
-							<h3>Shuberry Heels</h3>
-							<a href="single.html">$180.00</a>
+							<h3>{{this.Name}}</h3>
+							<a href="/single?id={{this._id}}">Rs. {{this.Price}}</a>
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="special-sec1">
-						<div class="col-xs-4 img-deals">
-							<img src="images/s2.jpg" alt="">
-						</div>
-						<div class="col-xs-8 img-deal1">
-							<h3>Chikku Loafers</h3>
-							<a href="single.html">$99.00</a>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="special-sec1">
-						<div class="col-xs-4 img-deals">
-							<img src="images/s1.jpg" alt="">
-						</div>
-						<div class="col-xs-8 img-deal1">
-							<h3>Bella Toes</h3>
-							<a href="single.html">$165.00</a>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="special-sec1">
-						<div class="col-xs-4 img-deals">
-							<img src="images/s5.jpg" alt="">
-						</div>
-						<div class="col-xs-8 img-deal1">
-							<h3>Red Bellies</h3>
-							<a href="single.html">$225.00</a>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="special-sec1">
-						<div class="col-xs-4 img-deals">
-							<img src="images/s3.jpg" alt="">
-						</div>
-						<div class="col-xs-8 img-deal1">
-							<h3>(SRV) Sneakers</h3>
-							<a href="single.html">$169.00</a>
-						</div>
-						<div class="clearfix"></div>
-					</div>
+					{{/each}}
 				</div>
 				<!-- //deals -->
 
@@ -235,7 +321,7 @@
 													<div class="grid-price ">
 														<span class="money ">Rs.
 															{{this.Price}}</span><del>{{this.actualPrice}}</del>
-														
+
 
 
 													</div>
@@ -254,9 +340,10 @@
 												</ul>
 											</div>
 											<div class="shoe single-item hvr-outline-out">
-												<button type="submit" onclick="addToCart('{{this._id}}')"
+												<button type="button"  value="{{this._id}}"
 													class="shoe-cart pshoe-cart"><i class="fa fa-cart-plus"
 														aria-hidden="true"></i></button>
+
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -287,3 +374,31 @@
 	</div>
 </section>
 <!-- //top products -->
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $('.shoe-cart').click(function (e) {
+
+            var id = $(this).val();
+
+            $.ajax({
+                url: "/addToCart/" + id,
+                success: function (response) {
+                    Swal.fire({
+                        position: 'middle',
+                        icon: 'success',
+                        title: 'Item added to cart 👍',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then((confirmed) => {
+                        // window.location.reload();
+                    })
+                }
+            }) 
+        })
+    })
+
+</script>

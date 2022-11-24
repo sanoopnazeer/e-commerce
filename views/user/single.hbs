@@ -38,39 +38,7 @@
 						<li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
 					</ul>
 				</div>
-				<div class="description">
-					<h5>Check delivery, payment options and charges at your location</h5>
-					<form action="#" method="post">
-						<input type="text" value="Enter pincode" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter pincode';}"
-						    required="">
-						<input type="submit" value="Check">
-					</form>
-				</div>
-				<div class="color-quality">
-					<div class="color-quality-right">
-						<h5>Quality :</h5>
-						<select id="country1" onchange="change_country(this.value)" class="frm-field required sect">
-								<option value="null">5 Qty</option>
-								<option value="null">6 Qty</option> 
-								<option value="null">7 Qty</option>					
-								<option value="null">10 Qty</option>								
-							</select>
-					</div>
-				</div>
-				<div class="occasional">
-					<h5>Types :</h5>
-					<div class="colr ert">
-						<label class="radio"><input type="radio" name="radio" checked=""><i></i>Casual Shoes</label>
-					</div>
-					<div class="colr">
-						<label class="radio"><input type="radio" name="radio"><i></i>Sneakers </label>
-					</div>
-					<div class="colr">
-						<label class="radio"><input type="radio" name="radio"><i></i>Formal Shoes</label>
-					</div>
-					<div class="clearfix"> </div>
-				</div>
-				<div class="occasion-cart">
+				{{!-- <div class="occasion-cart">
 					<div class="shoe single-item single_page_b">
 						<form action="/add-to-wishlist/{{this._id}}" method="get">
 							<input type="hidden" name="cmd" value="_cart">
@@ -82,12 +50,11 @@
 							<a href="" data-toggle="modal" data-target="#myModal1"></a>
 						</form>
 					</div>
-				</div>
-
+				</div> --}}
 
 				<div class="occasion-cart">
 					<div class="shoe single-item single_page_b">
-						<button onclick="addToCart('{{product._id}}')" class="btn btn-secondary" type="submit">Add to cart</button>
+						<button onclick="addToCart('{{product._id}}')" id="addToCart" style="margin-top: 50px; font-size: 20px;" type="button">Add to cart</button>
 					</div>
 				</div>
 				<ul class="social-nav model-3d-0 footer-social social single_page">
@@ -408,4 +375,29 @@
 	<!-- //js -->
 
 
+<script>
+
+    $(document).ready(function () {
+        $('#addToCart').click(function (e) {
+
+            var id = $(this).val();
+
+            $.ajax({
+                url: "/addToCart/" + id,
+                success: function (response) {
+                    Swal.fire({
+                        position: 'middle',
+                        icon: 'success',
+                        title: 'Item added to cart 👍',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then((confirmed) => {
+                        // window.location.reload();
+                    })
+                }
+            }) 
+        })
+    })
+
+</script>
 
