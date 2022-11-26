@@ -197,10 +197,12 @@ module.exports = {
   getOrderDates: () => {
     return new Promise(async (resolve, reject) => {
       const orderDates = await db.get().collection(collection.ORDER_COLLECTION).aggregate([{$project: {_id: 0, date: 1}}]).toArray()
+      console.log(orderDates);
       timeOfSale = []
       for(let orderDate of orderDates){
         timeOfSale.push(orderDate.date.toISOString().substring(0, 10))
       }
+      console.log(timeOfSale);
       resolve(timeOfSale)
     })
   },

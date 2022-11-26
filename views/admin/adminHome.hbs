@@ -143,24 +143,6 @@
 
 
 
-
-
-    {{!-- <script>
-        var xArray = ["Italy", "France", "Spain", "USA", "Argentina"];
-        var yArray = [55, 49, 44, 24, 15];
-
-        var data = [{
-            x: xArray,
-            y: yArray,
-            type: "bar"
-        }];
-
-        var layout = { title: "SALES REPORT" };
-
-        Plotly.newPlot("myPlot", data, layout);
-    </script> --}}
-
-
     <script>
         $(document).ready(function () {
             $('#sales-report').DataTable({
@@ -187,7 +169,7 @@
             x: xArray,
             y: yArray,
             mode: "markers",
-            type: "scatter"
+            type: "bar"
         }];
         let barData = [{
             x: xArray,

@@ -4,6 +4,7 @@ var router = express.Router();
 var productHelpers = require("../helpers/product-helpers");
 const userHelpers = require("../helpers/user-helpers");
 const { check, validationResult } = require("express-validator");
+var objectId = require("mongodb").ObjectId;
 
 const verifyLogin = (req, res, next) => {
   if (req.session.userLoggedIn) {
@@ -15,7 +16,7 @@ const verifyLogin = (req, res, next) => {
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
-  const userHome = true
+  const userHome = true;
   let user = req.session.user;
   let cartCount = null;
   if (req.session.user) {
@@ -92,8 +93,8 @@ router.get("/otpLoginVerify", (req, res) => {
 router.post("/otpLoginVerify", (req, res) => {
   userHelpers.otpSignupVerifyPost(req, res);
   req.session.user = response;
-  req.session.userLoggedIn = true;
-  res.redirect("/");
+  req.session.userLoggedIn = false;
+  res.redirect("/login");
 });
 
 router.post("/login", (req, res) => {
@@ -185,7 +186,7 @@ router.get("/place-order", async (req, res) => {
     subTotal,
     products,
     coupons,
-    userDetails : userDetails.address,
+    userDetails: userDetails.address,
   });
 });
 
@@ -193,20 +194,24 @@ router.post("/place-order", async (req, res) => {
   let products = await userHelpers.getCartProductList(req.body.userId);
   let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
   if (discountPrice > 0) {
-    userHelpers.placeOrder(req.body, products, discountPrice).then((orderId) => {
-      userHelpers.useCoupon(req.body.userId, couponCode)
-      userHelpers.updateSales(products)
+    userHelpers
+      .placeOrder(req.body, products, discountPrice)
+      .then((orderId) => {
+        userHelpers.useCoupon(req.body.userId, couponCode);
+        userHelpers.updateSales(products);
         if (req.body["payment-method"] === "COD") {
           res.json({ codSuccess: true });
         } else {
-          userHelpers.generateRazorpay(orderId, discountPrice).then((response) => {
+          userHelpers
+            .generateRazorpay(orderId, discountPrice)
+            .then((response) => {
               res.json(response);
             });
         }
       });
   } else {
     userHelpers.placeOrder(req.body, products, totalPrice).then((orderId) => {
-      userHelpers.updateSales(products)
+      userHelpers.updateSales(products);
       if (req.body["payment-method"] === "COD") {
         res.json({ codSuccess: true });
       } else {
@@ -263,24 +268,52 @@ router.post("/verify-payment", (req, res) => {
 let discountPrice;
 let couponCode;
 router.post("/redeem-code", async (req, res) => {
-  const userId = req.body.userId;
+  let userId = req.body.userId;
   let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
   couponCode = req.body;
   userHelpers.redeemCode(couponCode).then((couponDetails) => {
     if (couponDetails.usedBy) {
-      for (i = 0; i < couponDetails.usedBy.length; i++) {
-        if (couponDetails.usedBy == userId) {
-          res.json({ errMsg: "This coupon is already used" });
+      console.log("inside loop");
+      let n = 0;
+      for (userObj of couponDetails.usedBy) {
+        console.log(couponDetails.usedBy);
+        console.log(userObj.user);
+        if (userObj.user == userId) {
+          n++;
+        }
+      }
+      if (n > 0) {
+        res.json({ errMsg: "Coupon already used" });
+      } else {
+        console.log("else for loop");
+        let discount = couponDetails.Discount;
+        let MinPrice = couponDetails.MinPrice;
+        if (totalPrice >= couponDetails.MinPrice) {
+          discountPrice = totalPrice - couponDetails.Discount;
+          res.json({
+            status: true,
+            discountPrice,
+            discount,
+            errMsg: "Discount applied",
+          });
+        } else {
+          res.json({ errMsg: "Purchase more to apply coupon" });
         }
       }
     } else {
+      console.log("inside else usedby");
       let discount = couponDetails.Discount;
       let MinPrice = couponDetails.MinPrice;
       if (totalPrice >= couponDetails.MinPrice) {
         discountPrice = totalPrice - couponDetails.Discount;
-        res.json({ status: true, discountPrice, discount, errMsg: "Discount applied"});
+        res.json({
+          status: true,
+          discountPrice,
+          discount,
+          errMsg: "Discount applied",
+        });
       } else {
-        res.json({ errMsg: "Purchase more to apply coupon"});
+        res.json({ errMsg: "Purchase more to apply coupon" });
       }
     }
   });

@@ -35,7 +35,7 @@ module.exports = {
       db.get()
         .collection(collection.USER_COLLECTION)
         .insertOne(userData)
-        .then((response) => {
+        .then((userData) => {
           resolve(userData);
         });
     });
@@ -518,9 +518,15 @@ module.exports = {
     });
   },
   useCoupon: (userId, couponCode) => {
+    let userIdObj = {
+      user: userId,
+    };
     return new Promise((resolve, reject) => {
       console.log(couponCode);
-      db.get().collection(collection.COUPON_COLLECTION).updateOne({ Coupon: couponCode.Coupon}, {$push: {usedBy: objectId(userId)}})
+      console.log(userIdObj);
+      db.get().collection(collection.COUPON_COLLECTION).updateOne({ Coupon: couponCode.Coupon}, {$push: {usedBy: userIdObj}}).then((response) => {
+        resolve()
+      })
     })
   },
   getUserDetails: (user) => {

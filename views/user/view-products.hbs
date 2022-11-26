@@ -13,7 +13,7 @@
 				<nav>
 					<ul>
 						{{#if user}}
-						<h1 style="margin-bottom: 70px;">Hi, {{user.Name}}</h1>
+						<h1 style="margin-bottom: 70px;">Hi, <span style="color: red;">{{user.Name}}</span></h1>
 						{{/if}}
 						<li><a href="/" class="active">Home</a></li>
 						<li><a href="/about">About</a></li>
@@ -90,10 +90,9 @@
 </div>
 <!-- //slider -->
 <ul class="top_icons">
-	<li><a href="#"><span class="fa fa-facebook" aria-hidden="true"></span></a></li>
-	<li><a href="#"><span class="fa fa-twitter" aria-hidden="true"></span></a></li>
-	<li><a href="#"><span class="fa fa-linkedin" aria-hidden="true"></span></a></li>
-	<li><a href="#"><span class="fa fa-google-plus" aria-hidden="true"></span></a></li>
+	<li><a href="https://www.linkedin.com/in/sanoop-nazeer-7317a3233/"><span class="fa fa-linkedin" aria-hidden="true"></span></a></li>
+	<li><a href="https://www.instagram.com/max_throttler_46/"><span class="fa fa-instagram" aria-hidden="true"></span></a></li>
+	<li><a href="https://github.com/sanoopnazeer/e-commerce.git"><span class="fa fa-github" aria-hidden="true"></span></a></li>
 
 </ul>
 </div>
@@ -340,7 +339,7 @@
 												</ul>
 											</div>
 											<div class="shoe single-item hvr-outline-out">
-												<button type="button"  value="{{this._id}}"
+												<button type="button" onclick="addToCart('{{this._id}}')" value="{{this._id}}"
 													class="shoe-cart pshoe-cart"><i class="fa fa-cart-plus"
 														aria-hidden="true"></i></button>
 

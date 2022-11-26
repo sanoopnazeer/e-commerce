@@ -37,10 +37,10 @@
 
 
 				<div class="col-md-8 address_form">
+				{{#if userDetails}}
 					<h4>Select delivery details</h4>
-					{{!-- <form action="" method="post" id="saved-address" class="creditly-card-form agileinfo_form"> --}}
-
-						{{#if userDetails}}
+					{{!-- <form action="" method="post" id="saved-address" class="creditly-card-form agileinfo_form">
+						--}}
 						<div class="dropdown">
 							<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
 								aria-expanded="false">
@@ -49,19 +49,21 @@
 
 							<div class="dropdown-menu">
 								{{#each userDetails}}
-									<div
-										onclick="chooseAddress('{{this.Name}}','{{this.Mobile}}','{{this.Landmark}}','{{this.City}}','{{this.Pincode}}')">
-										{{!-- <button class="dropdown-item" type="button"> --}}
-											Name: {{this.Name}}, Mobile: {{this.Mobile}}, Landmark: {{this.Landmark}}, City: {{this.City}}, Pincode: {{this.Pincode}}
+								<div
+									onclick="chooseAddress('{{this.Name}}','{{this.Mobile}}','{{this.Landmark}}','{{this.City}}','{{this.Pincode}}')">
+									{{!-- <button class="dropdown-item" type="button"> --}}
+										Name: {{this.Name}}, Mobile: {{this.Mobile}}, Landmark: {{this.Landmark}}, City:
+										{{this.City}}, Pincode: {{this.Pincode}}
 										{{!-- </button> --}}
-									</div>
-									{{/each}}
+								</div>
+								{{/each}}
 							</div>
 
 						</div>
 						{{/if}}
 						<br>
-					{{!-- </form> --}}
+						{{!--
+					</form> --}}
 
 					<form action="" method="post" id="checkout-form" class="creditly-card-form agileinfo_form">
 						<section class="creditly-wrapper wrapper">
@@ -223,4 +225,3 @@
 		document.getElementById('Pincode').value = Pincode
 	}
 </script>
-

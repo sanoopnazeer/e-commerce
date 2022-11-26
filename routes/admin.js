@@ -80,10 +80,11 @@ router.post("/adminHome", (req, res) => {
 });
 
 router.get("/view-products", verifyLogin, function (req, res) {
+  const admin = req.session.admin;
   productHelper.getAllProducts().then((products) => {
     console.log(products);
     res.render("admin/view-products", {
-      admin: true,
+      admin,
       products,
       layout: "adminLayout.hbs",
     });
@@ -91,9 +92,10 @@ router.get("/view-products", verifyLogin, function (req, res) {
 });
 
 router.get("/view-users", verifyLogin, function (req, res) {
+  const admin = req.session.admin;
   userHelpers.getAllUsers().then((users) => {
     res.render("admin/view-users", {
-      admin: true,
+      admin,
       users,
       layout: "adminLayout.hbs",
     });
@@ -111,9 +113,10 @@ router.get("/unblock-user/:id", async (req, res) => {
 });
 
 router.get("/add-product", verifyLogin, function (req, res) {
+  const admin = req.session.admin;
   productHelpers.getAllCategories().then((categories) => {
     res.render("admin/add-product", {
-      admin: true,
+      admin,
       categories,
       layout: "adminLayout.hbs",
     });
@@ -183,9 +186,10 @@ router.get("/adminLogout", function (req, res) {
 });
 
 router.get("/add-categories", verifyLogin, (req, res) => {
+  const admin = req.session.admin;
   productHelpers.getAllCategories().then((categories) => {
     res.render("admin/add-categories", {
-      admin: true,
+      admin,
       categories,
       layout: "adminLayout.hbs",
     });
@@ -206,9 +210,10 @@ router.get("/delete-category/:id", (req, res) => {
 });
 
 router.get("/view-orders", verifyLogin, (req, res) => {
+  const admin = req.session.admin;
   productHelpers.getAllOrders().then((orders) => {
     res.render("admin/view-orders", {
-      admin: true,
+      admin,
       orders,
       layout: "adminLayout.hbs",
     });
@@ -223,9 +228,10 @@ router.post("/view-orders/:id", (req, res) => {
 });
 
 router.get("/add-coupons", verifyLogin, (req, res) => {
+  const admin = req.session.admin;
   productHelpers.getAllCoupons().then((allCoupons) => {
     res.render("admin/add-coupons", {
-      admin: true,
+      admin,
       allCoupons,
       layout: "adminLayout.hbs",
     });
