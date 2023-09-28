@@ -6,18 +6,19 @@
             <div class="checkout-left">
                 <div class="col-md-4 checkout-left-basket">
                     <h4 style="background-color: black;">PROFILE</h4>
-                    <div class="container" style="margin-left:100px; margin-bottom: 20px;">
+                    {{!-- <div class="container" style="margin-left:100px; margin-bottom: 20px;">
                             <img src="https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-user-profile-vector-png-image_4830519.jpg" alt="profile" style="max-width: 200px;">
-                    </div>
-                    <p>Name : {{userDetails.Name}}</p>
-                    <p>Mobile Number : {{userDetails.Mobilenumber}}</p>
-                    <p>Email ID : {{userDetails.Email}}</p>
+                    </div> --}}
+
+                    <p><b>Name :</b> {{userDetails.Name}}</p>
+                    <p><b>Mobile Number :</b> {{userDetails.Mobilenumber}}</p>
+                    <p><b>Email ID :</b> {{userDetails.Email}}</p>
                     <br>
 
                     {{#if userDetails.address}}
                     <p><b> Saved Addresses : </b></p>
                     {{#each userDetails.address}}
-                    <p>Address {{@index}}</p>
+                    <p>Address {{addOne @index}}</p>
                     <p>Name : {{this.Name}}</p>
                     <p>Mobile : {{this.Mobile}}</p>
                     <p>Landmark : {{this.Landmark}}</p>

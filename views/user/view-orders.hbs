@@ -21,7 +21,7 @@
                 <tbody>
                     {{#each allOrders}}
                     <tr>
-                        <td>{{@index}}</td>
+                        <td>{{addOne @index}}</td>
                         <td>{{this.date}}</td>
                         <td>{{this.deliveryDetails.Mobile}}</td>
                         <td>{{this.paymentMethod}}</td>

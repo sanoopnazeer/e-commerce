@@ -14,14 +14,13 @@
 						<h1 style="margin-bottom: 70px;">Hi, {{user.Name}}</h1>
 						{{/if}}
 						<li><a href="/" class="active">Home</a></li>
-						<li><a href="/about">About</a></li>
-						<li><a href="/contact">Contact</a></li>
 						{{#if user}}
 						<li><a href="/view-orders">Orders</a></li>
 						<li><a href="/view-profile">Profile</a></li>
 						<li><a id="logout" href="/logout">Logout</a></li>
 						{{else}}
 						<li><a href="/login">Login</a></li>
+						<li><a href="/signup">Sign Up</a></li>
 						{{/if}}
 
 					</ul>
@@ -52,7 +51,6 @@
 
 			<ul class="short">
 				<li><a href="/">Home</a><i>|</i></li>
-				<li><a href="/about">About</a><i>|</i></li>
 				<li><a href="/cart">Cart<span class="badge badge-success"
 							id="cart-count">{{cartCount}}</span></a><i>|</i></li>
 				{{#if user}}

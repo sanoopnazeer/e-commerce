@@ -321,8 +321,9 @@ router.post("/redeem-code", async (req, res) => {
 
 router.get("/view-profile", async (req, res) => {
   const user = req.session.user;
+  cartCount = await userHelpers.getCartCount(req.session.user._id);
   const userDetails = await userHelpers.getUserDetails(user);
-  res.render("user/view-profile", { user, userDetails });
+  res.render("user/view-profile", { user, userDetails, cartCount });
 });
 
 router.post("/add-address", (req, res) => {

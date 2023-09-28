@@ -13,7 +13,6 @@
 							<th>SL No.</th>
 							<th>Product</th>
 							<th>Quantity</th>
-							<th>Product Name</th>
 
 							<th>Price</th>
 							<th>Action</th>
@@ -23,10 +22,13 @@
 						{{#each products}}
 
 						<tr class="rem1">
-							<td class="invert">{{@index}}</td>
+							<td class="invert">{{addOne @index}}</td>
 							<td class="invert-image"><a href="/single/{{this.product._id}}"><img
 										src="/product-images/{{this.product._id}}.jpg" alt=" "
-										class="img-responsive"></a></td>
+										class="img-responsive"></a>
+										{{this.product.Name}} -
+										Rs. {{this.product.Price}}
+										</td>
 							<td class="invert">
 								<div class="quantity">
 									<div class="quantity-select">
@@ -39,7 +41,6 @@
 									</div>
 								</div>
 							</td>
-							<td class="invert">{{this.product.Name}}</td>
 							<td class="invert">Rs. {{this.product.Price}}</td>
 							<td class="invert">
 								<button class="btn btn-danger"
@@ -56,7 +57,7 @@
 					<h4>Amount to be paid</h4>
 					<ul>
 						{{#each products}}
-						<li>Product{{@index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
+						<li>Product{{addOne @index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
 						{{/each}}
 						<li>Total <i>-</i> <span>Rs. <span id="total">{{total}}</span></span></li>
 					</ul>

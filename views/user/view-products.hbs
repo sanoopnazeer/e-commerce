@@ -16,14 +16,13 @@
 						<h1 style="margin-bottom: 70px;">Hi, <span style="color: red;">{{user.Name}}</span></h1>
 						{{/if}}
 						<li><a href="/" class="active">Home</a></li>
-						<li><a href="/about">About</a></li>
-						<li><a href="/contact">Contact</a></li>
 						{{#if user}}
 						<li><a href="/view-orders">Orders</a></li>
 						<li><a href="/view-profile">Profile</a></li>
 						<li><a href="/logout">Logout</a></li>
 						{{else}}
 						<li><a href="/login">Login</a></li>
+						<li><a href="/signup">Sign Up</a></li>
 						{{/if}}
 
 
@@ -89,12 +88,6 @@
 	<div class="clearfix"> </div>
 </div>
 <!-- //slider -->
-<ul class="top_icons">
-	<li><a href="https://www.linkedin.com/in/sanoop-nazeer-7317a3233/"><span class="fa fa-linkedin" aria-hidden="true"></span></a></li>
-	<li><a href="https://www.instagram.com/max_throttler_46/"><span class="fa fa-instagram" aria-hidden="true"></span></a></li>
-	<li><a href="https://github.com/sanoopnazeer/e-commerce.git"><span class="fa fa-github" aria-hidden="true"></span></a></li>
-
-</ul>
 </div>
 </div>
 <!-- //banner -->
@@ -150,7 +143,7 @@
 					</form>
 				</div>
 				<!--preference -->
-				<div class="left-side">
+				{{!-- <div class="left-side">
 					<h3 class="agileits-sear-head">Occasion</h3>
 					<ul>
 						<li>
@@ -170,7 +163,7 @@
 							<span class="span">Ethnic</span>
 						</li>
 					</ul>
-				</div>
+				</div> --}}
 				<!-- // preference -->
 				<!-- discounts -->
 				<div class="left-side">
@@ -204,7 +197,7 @@
 				</div>
 				<!-- //discounts -->
 				<!-- reviews -->
-				<div class="customer-rev left-side">
+				{{!-- <div class="customer-rev left-side">
 					<h3 class="agileits-sear-head">Customer Review</h3>
 					<ul>
 						<li>
@@ -258,7 +251,7 @@
 							</a>
 						</li>
 					</ul>
-				</div>
+				</div> --}}
 				<!-- //reviews -->
 				<!-- deals -->
 				<div class="deal-leftmk left-side">
@@ -339,10 +332,9 @@
 												</ul>
 											</div>
 											<div class="shoe single-item hvr-outline-out">
-												<button type="button" onclick="addToCart('{{this._id}}')" value="{{this._id}}"
-													class="shoe-cart pshoe-cart"><i class="fa fa-cart-plus"
-														aria-hidden="true"></i></button>
-
+												<button type="button" onclick="addToCart('{{this._id}}')"
+													value="{{this._id}}" class="shoe-cart pshoe-cart"><i
+														class="fa fa-cart-plus" aria-hidden="true"></i></button>
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -377,27 +369,26 @@
 
 
 <script>
+	$(document).ready(function () {
+		$('.shoe-cart').click(function (e) {
 
-    $(document).ready(function () {
-        $('.shoe-cart').click(function (e) {
+			var id = $(this).val();
 
-            var id = $(this).val();
-
-            $.ajax({
-                url: "/addToCart/" + id,
-                success: function (response) {
-                    Swal.fire({
-                        position: 'middle',
-                        icon: 'success',
-                        title: 'Item added to cart 👍',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then((confirmed) => {
-                        // window.location.reload();
-                    })
-                }
-            }) 
-        })
-    })
-
+			
+			$.ajax({
+				url: "/addToCart/" + id,
+				success: function (response) {
+					Swal.fire({
+						position: 'middle',
+						icon: 'success',
+						title: 'Item added to cart 👍',
+						showConfirmButton: false,
+						timer: 1500
+					}).then((confirmed) => {
+						// window.location.reload();
+					})
+				}
+			})
+		})
+	})
 </script>
