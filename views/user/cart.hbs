@@ -33,11 +33,11 @@
 								<div class="quantity">
 									<div class="quantity-select">
 										<button class="entry value-minus"
-											onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',-1)">-</button>
+											onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',-1)">-</button>
 										<div class="entry value"><span
 												id="{{this.product._id}}">{{this.quantity}}</span></div>
 										<button class="entry value-plus active"
-											onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
+											onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',1)">+</button>
 									</div>
 								</div>
 							</td>

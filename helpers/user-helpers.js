@@ -180,7 +180,7 @@ module.exports = {
               }
             )
             .then((response) => {
-              resolve();  
+              resolve();
             });
         }
       } else {
@@ -349,9 +349,25 @@ module.exports = {
   },
   placeOrder: (order, products, total) => {
     return new Promise((resolve, reject) => {
-      // let d = new Date().toString()
-      // let index = d.lastIndexOf(":")+3
-      // let date = (d.substring(0, index))
+      const date = new Date();
+
+      // Define date format options
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true, // Use 12-hour format
+      };
+
+      // Format the date
+      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        date
+      );
+
+      console.log("Formatted Date:", formattedDate);
 
       let status = order["payment-method"] === "COD" ? "placed" : "pending";
       let orderObj = {
@@ -367,7 +383,7 @@ module.exports = {
         products: products,
         totalAmount: total,
         status: status,
-        date: new Date(),
+        date: formattedDate,
         FinalStatus: false,
       };
 
@@ -407,6 +423,7 @@ module.exports = {
         .get()
         .collection(collection.ORDER_COLLECTION)
         .find({ userId: objectId(userId) })
+        .sort({ date: -1 })
         .toArray();
       resolve(orders);
     });
@@ -524,10 +541,16 @@ module.exports = {
     return new Promise((resolve, reject) => {
       console.log(couponCode);
       console.log(userIdObj);
-      db.get().collection(collection.COUPON_COLLECTION).updateOne({ Coupon: couponCode.Coupon}, {$push: {usedBy: userIdObj}}).then((response) => {
-        resolve()
-      })
-    })
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .updateOne(
+          { Coupon: couponCode.Coupon },
+          { $push: { usedBy: userIdObj } }
+        )
+        .then((response) => {
+          resolve();
+        });
+    });
   },
   getUserDetails: (user) => {
     return new Promise((resolve, reject) => {
@@ -554,24 +577,37 @@ module.exports = {
   },
   getTotalUsers: () => {
     return new Promise(async (resolve, reject) => {
-      await db.get().collection(collection.USER_COLLECTION).count().then((response) => {
-        resolve(response)
-      })
-    })
+      await db
+        .get()
+        .collection(collection.USER_COLLECTION)
+        .count()
+        .then((response) => {
+          resolve(response);
+        });
+    });
   },
   getTotalOrders: () => {
     return new Promise(async (resolve, reject) => {
-      await db.get().collection(collection.ORDER_COLLECTION).count().then((response) => {
-        resolve(response)
-      })
-    })
+      await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .count()
+        .then((response) => {
+          resolve(response);
+        });
+    });
   },
-  updateSales: (products) => {    
+  updateSales: (products) => {
     return new Promise((resolve, reject) => {
       products.forEach((value, index) => {
-          const proId = products[index].item
-        db.get().collection(collection.PRODUCTS_COLLECTIONS).updateOne({_id: proId}, {$inc: {Sales: value.quantity, Stock: -value.quantity}})
-      })
+        const proId = products[index].item;
+        db.get()
+          .collection(collection.PRODUCTS_COLLECTIONS)
+          .updateOne(
+            { _id: proId },
+            { $inc: { Sales: value.quantity, Stock: -value.quantity } }
+          );
+      });
     });
-  }
+  },
 };

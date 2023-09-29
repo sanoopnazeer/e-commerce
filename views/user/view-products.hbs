@@ -111,7 +111,7 @@
 			</div>
 		</div>
 		<div class="style-image-2">
-			<img src="images/b2.jpg" alt="shoe">
+			<img src="images/b2.jpg" style="height: 392px;" alt="shoe">
 			<div class="style-grid-2-text">
 				<h3>Air force</h3>
 			</div>
@@ -137,8 +137,8 @@
 			<div class="side-bar col-md-3">
 				<div class="search-hotel">
 					<h3 class="agileits-sear-head">Search Here..</h3>
-					<form action="#" method="post">
-						<input type="search" placeholder="Product name..." name="search" required="">
+					<form id="searchForm">
+						<input type="search" id="searchInput" placeholder="Product name..." name="search" required="">
 						<input type="submit" value=" ">
 					</form>
 				</div>
@@ -254,7 +254,7 @@
 				</div> --}}
 				<!-- //reviews -->
 				<!-- deals -->
-				<div class="deal-leftmk left-side">
+				{{!-- <div class="deal-leftmk left-side">
 					<h3 class="agileits-sear-head">Special Deals</h3>
 					{{#each products}}
 					<div class="special-sec1">
@@ -268,7 +268,7 @@
 						<div class="clearfix"></div>
 					</div>
 					{{/each}}
-				</div>
+				</div> --}}
 				<!-- //deals -->
 
 			</div>
@@ -318,7 +318,7 @@
 
 													</div>
 												</div>
-												<ul class="stars">
+												{{!-- <ul class="stars">
 													<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
 													</li>
 													<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
@@ -329,7 +329,7 @@
 																aria-hidden="true"></i></a></li>
 													<li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
 													</li>
-												</ul>
+												</ul> --}}
 											</div>
 											<div class="shoe single-item hvr-outline-out">
 												<button type="button" onclick="addToCart('{{this._id}}')"
@@ -367,14 +367,12 @@
 <!-- //top products -->
 
 
-
 <script>
 	$(document).ready(function () {
 		$('.shoe-cart').click(function (e) {
 
 			var id = $(this).val();
 
-			
 			$.ajax({
 				url: "/addToCart/" + id,
 				success: function (response) {

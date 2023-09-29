@@ -23,7 +23,10 @@ router.get("/", async function (req, res, next) {
     cartCount = await userHelpers.getCartCount(req.session.user._id);
   }
   productHelpers.getAllProducts().then((products) => {
-    res.render("user/view-products", { products, user, cartCount, userHome });
+    const renderProducts = JSON.stringify(products)
+
+    console.log(renderProducts)
+    res.render("user/view-products", { products, renderProducts, user, cartCount, userHome });
   });
 });
 
@@ -122,7 +125,7 @@ router.get("/cart", verifyLogin, async (req, res) => {
   if (products.length > 0) {
     total = await userHelpers.getTotalAmount(req.session.user._id);
   }
-  let user = req.session.user._id;
+  let user = req.session.user;
   cartCount = await userHelpers.getCartCount(req.session.user._id);
   res.render("user/cart", { products, user, cartCount, total });
 });
@@ -239,7 +242,7 @@ router.get("/view-ordered-items", async (req, res) => {
   const user = req.session.user;
   const orderId = req.query.id;
   const products = await userHelpers.getOrderedItems(orderId);
-  res.render("user/view-ordered-items", { user, products });
+  res.render("user/view-ordered-items", { user, products, orderId });
 });
 
 router.get("/cancel-order/:id", (req, res) => {

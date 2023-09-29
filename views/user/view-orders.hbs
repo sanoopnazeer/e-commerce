@@ -5,11 +5,12 @@
     <div class="row">
         <div class="col-md-12">
             {{#if allOrders}}
-            <table id="example" class="display nowrap" style="width:100%">
+            <table id="example" class="display">
                 <thead>
                     <tr>
                         <th>Sl.No</th>
                         <th>Date</th>
+                        <th>Delivery to</th>
                         <th>Mobile Number</th>
                         <th>Payment Method</th>
                         <th>Total Amount</th>
@@ -23,6 +24,7 @@
                     <tr>
                         <td>{{addOne @index}}</td>
                         <td>{{this.date}}</td>
+                        <td>{{this.deliveryDetails.City}}</td>
                         <td>{{this.deliveryDetails.Mobile}}</td>
                         <td>{{this.paymentMethod}}</td>
                         <td>Rs. {{this.totalAmount}}</td>
