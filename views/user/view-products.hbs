@@ -170,27 +170,27 @@
 					<h3 class="agileits-sear-head">Discount</h3>
 					<ul>
 						<li>
-							<input type="checkbox" class="checked">
+							<input type="checkbox" class="discount-checkbox" value="5">
 							<span class="span">5% or More</span>
 						</li>
 						<li>
-							<input type="checkbox" class="checked">
+							<input type="checkbox" class="discount-checkbox" value="10">
 							<span class="span">10% or More</span>
 						</li>
 						<li>
-							<input type="checkbox" class="checked">
+							<input type="checkbox" class="discount-checkbox" value="20">
 							<span class="span">20% or More</span>
 						</li>
 						<li>
-							<input type="checkbox" class="checked">
+							<input type="checkbox" class="discount-checkbox" value="30">
 							<span class="span">30% or More</span>
 						</li>
 						<li>
-							<input type="checkbox" class="checked">
+							<input type="checkbox" class="discount-checkbox" value="50">
 							<span class="span">50% or More</span>
 						</li>
 						<li>
-							<input type="checkbox" class="checked">
+							<input type="checkbox" class="discount-checkbox" value="60">
 							<span class="span">60% or More</span>
 						</li>
 					</ul>
@@ -288,7 +288,21 @@
 					<div class="clearfix"></div>
 					<!-- product-sec1 -->
 					<div class="product-sec1">
+
+
+<!-- Add a section to display search results -->
+<div class="search-results">
+
+</div>
+
+<div class="discount-results">
+
+</div>
+
+
+						
 						<!--/mens-->
+  						<h2>All products</h2>
 						{{#each products}}
 						<div class="col-md-4 product-men">
 							<div class="product-shoe-info shoe">
@@ -312,24 +326,13 @@
 												<div class="product_price">
 													<div class="grid-price ">
 														<span class="money ">Rs.
-															{{this.Price}}</span><del>{{this.actualPrice}}</del>
-
+															{{this.Price}}</span><del>Rs. {{this.actualPrice}}</del>
+																<p>{{this.Offer}}% off</p>
 
 
 													</div>
 												</div>
-												{{!-- <ul class="stars">
-													<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-													</li>
-													<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-													</li>
-													<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-													</li>
-													<li><a href="#"><i class="fa fa-star-half-o"
-																aria-hidden="true"></i></a></li>
-													<li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-													</li>
-												</ul> --}}
+												
 											</div>
 											<div class="shoe single-item hvr-outline-out">
 												<button type="button" onclick="addToCart('{{this._id}}')"
@@ -365,6 +368,97 @@
 	</div>
 </section>
 <!-- //top products -->
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+
+    // Function to perform the search
+    function performSearch(query, products) {
+      query = query.toLowerCase().trim();
+
+      // Filter products based on the search query
+      const searchResults = products.filter(product => product.Name.toLowerCase().includes(query));
+
+      return searchResults; // Return the filtered results
+    }
+
+    // Function to display the search results in the template
+    function displayResults(results) {
+    const searchResultsSection = document.querySelector('.search-results');
+    searchResultsSection.innerHTML = ''; // Clear previous results
+
+		
+    if (results.length > 0) {
+    	const headingDiv = document.createElement('div');
+		headingDiv.innerHTML = `<h2>Search Results</h2>`
+		searchResultsSection.classList.add('row');
+        searchResultsSection.appendChild(headingDiv);
+          
+      results.forEach(product => {
+        // Create HTML elements for each search result and append them to the searchResultsSection
+        const productDiv = document.createElement('div');
+      productDiv.innerHTML = `
+    <div class="col-md-4 product-men">
+      <div class="product-shoe-info shoe">
+        <div class="men-pro-item">
+          <!-- Render product details as needed -->
+          <div class="men-thumb-item">
+            <img src="/product-images/${product._id}.jpg" alt="">
+            <div class="men-cart-pro">
+              <div class="inner-men-cart-pro">
+                <a href="/single?id=${product._id}" class="link-product-add-cart">Quick View</a>
+              </div>
+            </div>
+            <span class="product-new-top">New</span>
+          </div>
+          <div class="item-info-product">
+            <h4>
+              <a href="/single?id=${product._id}">${product.Name}</a>
+            </h4>
+            <div class="info-product-price">
+              <div class="grid_meta">
+                <div class="product_price">
+                  <div class="grid-price">
+                    <span class="money">Rs. ${product.Price}</span><del>${product.actualPrice}</del>
+                  </div>
+                </div>
+              </div>
+              <div class="shoe single-item hvr-outline-out">
+                <button type="button" onclick="addToCart('${product._id}')" value="${product._id}"
+                  class="shoe-cart pshoe-cart"><i class="fa fa-cart-plus" aria-hidden="true"></i></button>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+        `;
+        searchResultsSection.appendChild(productDiv);
+
+      });
+    } else {
+      // If no results found, display a message
+      searchResultsSection.innerHTML = '<p>No results found.</p>';
+    }
+  }
+
+    // Event listener for form submission
+    searchForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var productsData = {{{renderProducts}}};
+
+      const query = searchInput.value.trim();
+      const filteredData = performSearch(query, productsData);
+      displayResults(filteredData);
+    });
+  });
+</script>
+
+
 
 
 <script>
