@@ -111,7 +111,7 @@
 			</div>
 		</div>
 		<div class="style-image-2">
-			<img src="images/b2.jpg" style="height: 392px;" alt="shoe">
+			<img src="images/b2.jpg" alt="shoe">
 			<div class="style-grid-2-text">
 				<h3>Air force</h3>
 			</div>
@@ -169,10 +169,6 @@
 				<div class="left-side">
 					<h3 class="agileits-sear-head">Discount</h3>
 					<ul>
-						<li>
-							<input type="checkbox" class="discount-checkbox" value="5">
-							<span class="span">5% or More</span>
-						</li>
 						<li>
 							<input type="checkbox" class="discount-checkbox" value="10">
 							<span class="span">10% or More</span>
@@ -279,11 +275,11 @@
 				<div class="wrapper_top_shop">
 					<div class="col-md-6 shop_left">
 						<img src="images/banner3.jpg" alt="">
-						<h6>40% off</h6>
+						<h6>10% off</h6>
 					</div>
 					<div class="col-md-6 shop_right">
 						<img src="images/banner2.jpg" alt="">
-						<h6>50% off</h6>
+						<h6>20% off</h6>
 					</div>
 					<div class="clearfix"></div>
 					<!-- product-sec1 -->
@@ -422,7 +418,7 @@
               <div class="grid_meta">
                 <div class="product_price">
                   <div class="grid-price">
-                    <span class="money">Rs. ${product.Price}</span><del>${product.actualPrice}</del>
+                    <span class="money">Rs. ${product.Price}</span><del>Rs. ${product.actualPrice}</del>
                   </div>
                 </div>
               </div>
@@ -458,7 +454,103 @@
   });
 </script>
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+    const discountCheckboxes = document.querySelectorAll('.discount-checkbox');
+    const productsData = {{{renderProducts}}}; // Your product data
 
+    function applyDiscountFilter() {
+        const selectedDiscounts = Array.from(discountCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => parseInt(checkbox.value));
+console.log(selectedDiscounts)
+
+        if (selectedDiscounts.length === 0) {
+            // If no checkboxes are checked, clear the search results
+            clearResults();
+        } else {
+            // Filter products based on the selected discount ranges
+            const filteredData = productsData.filter(product => {
+                return selectedDiscounts.some(discount => product.Offer >= discount);
+            });
+
+            displayResults(filteredData);
+        }
+    }
+
+    // Add event listeners to the discount checkboxes
+    discountCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', applyDiscountFilter);
+    });
+
+    // Function to display the search results in the template (similar to your previous code)
+    function displayResults(results) {
+		console.log(results)
+        const searchResultsSection = document.querySelector('.discount-results');
+        searchResultsSection.innerHTML = ''; // Clear previous results
+
+        if (results.length > 0) {
+    	const headingDiv = document.createElement('div');
+		headingDiv.innerHTML = `<h2>Discount Results</h2>`
+		searchResultsSection.classList.add('row');
+        searchResultsSection.appendChild(headingDiv);
+          
+      results.forEach(product => {
+        // Create HTML elements for each search result and append them to the searchResultsSection
+        const productDiv = document.createElement('div');
+      productDiv.innerHTML = `
+    <div class="col-md-4 product-men">
+      <div class="product-shoe-info shoe">
+        <div class="men-pro-item">
+          <!-- Render product details as needed -->
+          <div class="men-thumb-item">
+            <img src="/product-images/${product._id}.jpg" alt="">
+            <div class="men-cart-pro">
+              <div class="inner-men-cart-pro">
+                <a href="/single?id=${product._id}" class="link-product-add-cart">Quick View</a>
+              </div>
+            </div>
+            <span class="product-new-top">New</span>
+          </div>
+          <div class="item-info-product">
+            <h4>
+              <a href="/single?id=${product._id}">${product.Name}</a>
+            </h4>
+            <div class="info-product-price">
+              <div class="grid_meta">
+                <div class="product_price">
+                  <div class="grid-price">
+                    <span class="money">Rs. ${product.Price}</span><del>Rs. ${product.actualPrice}</del>
+					<p>${product.Offer}% off</p>
+                  </div>
+                </div>
+              </div>
+              <div class="shoe single-item hvr-outline-out">
+                <button type="button" onclick="addToCart('${product._id}')" value="${product._id}"
+                  class="shoe-cart pshoe-cart"><i class="fa fa-cart-plus" aria-hidden="true"></i></button>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+        `;
+        searchResultsSection.appendChild(productDiv);
+
+      });
+    } else {
+      // If no results found, display a message
+      searchResultsSection.innerHTML = '<p>No results found.</p>';
+    }
+    }
+	function clearResults() {
+        const searchResultsSection = document.querySelector('.discount-results');
+        searchResultsSection.innerHTML = ''; // Clear all results
+    }
+});
+
+</script>
 
 
 <script>
