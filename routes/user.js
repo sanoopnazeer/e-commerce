@@ -42,7 +42,7 @@ router.get("/login", function (req, res, next) {
 router.get("/signup", function (req, res, next) {
   res.render("user/signup");
 });
-
+ 
 router.post(
   "/signup",
   check("Name").notEmpty().withMessage("Please enter a Name"),
