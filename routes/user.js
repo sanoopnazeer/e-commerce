@@ -26,8 +26,6 @@ router.get("/", async function (req, res, next) {
   }
   productHelpers.getAllProducts().then((products) => {
     const renderProducts = JSON.stringify(products)
-
-    console.log(renderProducts)
     res.render("user/view-products", { products, renderProducts, user, cartCount, userHome });
   });
 });
@@ -151,7 +149,8 @@ router.get("/cart", verifyLogin, async (req, res) => {
   }
   let user = req.session.user;
   cartCount = await userHelpers.getCartCount(req.session.user._id);
-  res.render("user/cart", { products, user, cartCount, total });
+  const renderProducts = JSON.stringify(products)
+  res.render("user/cart", { products, renderProducts, user, cartCount, total });
 });
 
 router.get("/add-to-cart/:id", (req, res) => {

@@ -5,11 +5,11 @@
 
 			<div class="checkout-left">
 				<div class="col-md-4 checkout-left-basket">
-					<h4>Amount to be paid</h4>
 					<ul>
+						<h4>Amount to be paid</h4>
 						<form action="#" method="post" id="redeem-code">
 							<select class="form-control" name="Coupon" id="Coupon">
-								<option value="" disabled selected hidden>ENTER COUPON CODE</option>
+								<option value="" disabled selected hidden>APPLY COUPON CODE</option>
 								{{#each coupons}}
 								<option value="{{this.Coupon}}">{{this.Coupon}}</option>
 								{{/each}}
@@ -27,7 +27,8 @@
 								CODE</button>
 						</form>
 						{{#each products}}
-						<li>Product{{@index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
+						<li>Product {{addOne @index}} <i>-</i> <span>Rs. {{this.product.Price}} x {{this.quantity}}
+								nos</span></li>
 						{{/each}}
 						<li>Sub total <i>-</i> <span>Rs. <span id="subTotal">{{subTotal}}</span></span></li>
 						<li>Discount applied <i>-</i> <span>Rs. <span id="discount">0</span></span></li>
@@ -37,7 +38,7 @@
 
 
 				<div class="col-md-8 address_form">
-				{{#if userDetails}}
+					{{#if userDetails}}
 					<h4>Select delivery details</h4>
 					{{!-- <form action="" method="post" id="saved-address" class="creditly-card-form agileinfo_form">
 						--}}
@@ -61,7 +62,7 @@
 
 						</div>
 						{{/if}}
-						<br>
+						<hr>
 						{{!--
 					</form> --}}
 
@@ -104,14 +105,14 @@
 										<input class="form-control" type="text" placeholder="Pincode" id="Pincode"
 											name="Pincode">
 									</div>
-									<div class="controls">
-										<label class="control-label">Payment Method</label>
+									<hr>
+
+									<div>
+										<h4 class="control-label">Payment Method</h4>
 										<input type="radio" id="" name="payment-method" value="COD">
-										<label for="">Cash on delivery (COD)</label><br>
+										<label for="">Cash on delivery (COD)</label>
 										<input type="radio" id="" name="payment-method" value="RazorPay">
-										<label for="">RazorPay</label><br>
-										<input type="radio" id="" name="payment-method" value="Paypal">
-										<label for="">Paypal</label><br>
+										<label for="">RazorPay</label>
 									</div>
 									<button class="btn btn-success">CHECKOUT</button>
 								</div>
@@ -130,6 +131,23 @@
 <script>
 	$("#checkout-form").submit((e) => {
 		e.preventDefault()
+
+		const requiredFields = ['Name', 'Mobile', 'Landmark', 'City', 'Pincode'];
+		let isValid = true;
+
+		requiredFields.forEach((fieldName) => {
+			const fieldValue = $.trim($(`#${fieldName}`).val());
+
+			if (fieldValue === '') {
+				isValid = false;
+			}
+		});
+
+		if (!isValid) {
+			alert(`Please fill in the necessary fields.`);
+			return;
+		}
+
 		$.ajax({
 			url: '/place-order',
 			method: 'post',

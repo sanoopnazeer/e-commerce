@@ -26,9 +26,9 @@
 							<td class="invert-image"><a href="/single/{{this.product._id}}"><img
 										src="/product-images/{{this.product._id}}.jpg" alt=" "
 										class="img-responsive"></a>
-										{{this.product.Name}} -
-										Rs. {{this.product.Price}}
-										</td>
+								{{this.product.Name}} -
+								Rs. {{this.product.Price}}
+							</td>
 							<td class="invert">
 								<div class="quantity">
 									<div class="quantity-select">
@@ -41,7 +41,7 @@
 									</div>
 								</div>
 							</td>
-							<td class="invert">Rs. {{this.product.Price}}</td>
+							<td class="invert" id="total_{{this.product._id}}"></td>
 							<td class="invert">
 								<button class="btn btn-danger"
 									onclick="removeItem('{{this._id}}','{{this.product._id}}')">REMOVE</button>
@@ -52,20 +52,13 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="checkout-left">
+			<div class="checkout-left" style="display: flex;flex-direction: column; align-items: flex-end;">
 				<div class="col-md-4 checkout-left-basket">
-					<h4>Amount to be paid</h4>
-					<ul>
-						{{#each products}}
-						<li>Product{{addOne @index}} <i>-</i> <span>Rs. {{this.product.Price}}</span></li>
-						{{/each}}
-						<li>Total <i>-</i> <span>Rs. <span id="total">{{total}}</span></span></li>
-					</ul>
+					<h4>Total Amount to be paid - <span>Rs. <span id="total">{{total}}</span></span></h4>
 				</div>
-				<div class="checkout-right-basket">
+				<div class="checkout-left-basket">
 					<button class="submit check_out">
 						<a href="/place-order">PLACE ORDER</a>
-
 					</button>
 				</div>
 
@@ -84,27 +77,32 @@
 		function changeQuantity(cartId, proId, userId, count) {
 			let quantity = parseInt(document.getElementById(proId).innerHTML)
 			count = parseInt(count)
+			const products = {{{ renderProducts }}}
 
-			$.ajax({
-				url: '/change-product-quantity',
-				data: {
-					cart: cartId,
-					product: proId,
-					user: userId,
-					count: count,
-					quantity: quantity
-				},
-				method: 'post',
-				success: (response) => {
-					if (response.removeProduct) {
-						alert("Product Removed from cart")
-						location.reload()
-					} else {
-						document.getElementById(proId).innerHTML = quantity + count
-						document.getElementById('total').innerHTML = response.total
-					}
+		$.ajax({
+			url: '/change-product-quantity',
+			data: {
+				cart: cartId,
+				product: proId,
+				user: userId,
+				count: count,
+				quantity: quantity
+			},
+			method: 'post',
+			success: (response) => {
+				if (response.removeProduct) {
+					alert("Product removed from cart")
+					location.reload()
+				} else {
+					document.getElementById(proId).innerHTML = quantity + count
+					document.getElementById('total').innerHTML = response.total
+					const product = products.find((item) => item.product._id === proId);
+					const productPrice = product.product.Price; // Get the product price
+					const updatedTotalPrice = productPrice * (quantity + count);
+					document.getElementById('total_' + proId).innerHTML = 'Rs.' + updatedTotalPrice;
 				}
-			})
+			}
+		})
 		}
 
 		function removeItem(cartId, proId) {
@@ -125,4 +123,23 @@
 				}
 			})
 		}
+	</script>
+
+	<script>
+		function updateTotalPrices() {
+			const products = {{{ renderProducts }}}
+			
+		products.forEach((product) => {
+			const productId = product.product._id;
+			const price = product.product.Price;
+			const quantity = product.quantity
+
+			const totalPrice = price * quantity;
+			 const totalElement = document.getElementById(`total_${productId}`);
+      if (totalElement) {
+        totalElement.textContent = `Rs. ${totalPrice}`;
+      }
+		})
+}
+		window.addEventListener('load', updateTotalPrices);
 	</script>
