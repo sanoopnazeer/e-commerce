@@ -10,8 +10,9 @@
         <div style="display: flex; justify-content: space-between;">
           {{!-- <a href="#">Resend OTP</a> --}}
           <button type="submit" class="btn btn-primary float-right">Submit</button>
+          <p>{{{errorMessage}}}</p>
           <p id="resendLine">Resend OTP in <span id="timer">00:05</span> seconds</p>
-          <button type="submit" class="btn float-right" id="resendButton">Resend OTP</button>
+            <button type="submit" class="btn float-right" id="resendButton" data-action="resendOTP">Resend OTP</button>
         </div>
       </form>
     </div>
@@ -50,7 +51,6 @@
     const resendButton = document.getElementById("resendButton");
     const resendLine = document.getElementById("resendLine");
 
-
     // Disable the "Resend OTP" button on page load
     resendButton.style.display = "none"
 
@@ -67,8 +67,34 @@
       // Start the timer again
       startTimer(timerDuration, timerDisplay);
 
-      // Add logic to resend OTP here (e.g., make an AJAX request)
-      // You may also want to disable the "Resend OTP" button for a cooldown period.
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    // Attach a click event listener to the "Resend OTP" button
+    $('#resendButton').on('click', function () {
+      // Send an AJAX request to the backend route
+      $.ajax({
+        type: 'POST',
+        url: '/resend-otp', // Update this with the correct backend route URL
+        dataType: 'json', // Adjust the data type based on your response
+        success: function (response) {
+          // Handle the server's response here
+          if (response.success) {
+            // Update the timer or display a success message
+            $('#timer').text('00:05'); // Update the timer if needed
+          } else {
+            // Display an error message, if applicable
+            $('#errorMessage').text('Error: ' + response.message);
+          }
+        },
+        error: function (error) {
+          // Handle errors, e.g., display a generic error message
+          $('#errorMessage').text('An error occurred. Please try again later.');
+        },
+      });
     });
   });
 </script>

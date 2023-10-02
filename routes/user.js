@@ -5,6 +5,8 @@ var productHelpers = require("../helpers/product-helpers");
 const userHelpers = require("../helpers/user-helpers");
 const { check, validationResult } = require("express-validator");
 var objectId = require("mongodb").ObjectId;
+var db = require("../config/connection");
+var collection = require("../config/collections");
 
 const verifyLogin = (req, res, next) => {
   if (req.session.userLoggedIn) {
@@ -65,7 +67,14 @@ router.post(
   check("Password")
     .matches(/[!@#$%^&*?]/)
     .withMessage("Password must contain at least one special character"),
-  (req, res, next) => {
+  async (req, res, next) => {
+
+    const userExist = await db.get().collection(collection.USER_COLLECTION).find({Email: req.body.Email}).toArray()
+  
+    if(userExist.length > 0){
+      return res.render("user/signup", { userExistError: "User already exists" });
+    }
+
     const errors = validationResult(req);
     console.log(errors);
     var error1 = errors.errors.find((item) => item.param === "Name") || "";
@@ -80,24 +89,39 @@ router.post(
       };
       res.render("user/signup", { errors });
     } else {
-      userHelpers.doSignup(req.body).then((response) => {
+      userHelpers.sendOtp(req.body).then((response) => {
         req.session.user = response;
-        req.session.userLoggedIn = true;
+        // req.session.userLoggedIn = true;
         res.redirect("/otpLoginVerify");
-      });
+      })
     }
   }
 );
 
 router.get("/otpLoginVerify", (req, res) => {
-  res.render("user/otpLoginVerify");
+  const errorMessage = req.query.error;
+  res.render("user/otpLoginVerify", { errorMessage });
 });
 
+router.post('/resend-otp', (req, res) => {
+  const user = req.session.user
+  userHelpers.sendOtp(user)
+})
+
 router.post("/otpLoginVerify", (req, res) => {
-  userHelpers.otpSignupVerifyPost(req, res);
-  req.session.user = response;
-  req.session.userLoggedIn = false;
-  res.redirect("/login");
+  const user = req.session.user
+  const otp = req.body.otp
+  userHelpers.otpSignupVerifyPost(user, otp).then((response) => {
+    req.session.user = response;
+    req.session.userLoggedIn = false;
+    userHelpers.doSignup(user).then((response) => {
+      res.redirect('/login')
+    })
+  }).catch((error) => {
+    console.log(error)
+    const errorMessage = encodeURIComponent(error); // Encode the error message
+  res.redirect(`/otpLoginVerify?error=${errorMessage}`);
+  })
 });
 
 router.post("/login", (req, res) => {

@@ -19,19 +19,6 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       userData.userBlocked = false;
       userData.Password = await bcrypt.hash(userData.Password, 10);
-      client.verify
-        .services(process.env.serviceID)
-        .verifications.create({
-          to: `+91${userData.Mobilenumber}`,
-          channel: "sms",
-        })
-        .then((data) => {
-          (Name1 = userData.Name),
-            (Mobilenumber1 = userData.Mobilenumber),
-            (Password1 = hashPassword),
-            (Email1 = userData.Email);
-          res.redirect("/otpSignupVerify");
-        });
       db.get()
         .collection(collection.USER_COLLECTION)
         .insertOne(userData)
@@ -40,42 +27,42 @@ module.exports = {
         });
     });
   },
-  otpSignupVerifyPost: (req, res) => {
-    if (req.body.otp.length === 6) {
+  sendOtp: (userData) => {
+    return new Promise(async (resolve, reject) => {
       client.verify
         .services(process.env.serviceID)
-        .verificationChecks.create({
-          to: `+91${Mobilenumber1}`,
-          code: req.body.otp,
+        .verifications.create({
+          to: `+91${userData.Mobilenumber}`,
+          channel: "sms",
         })
         .then((data) => {
-          if (data.status === "approved") {
-            const user = new User({
-              Name: Name1,
-              Mobilenumber: Mobilenumber1,
-              Email: Email1,
-              Password: Password1,
-            });
-            user
-              .save()
-              .then((result) => {
-                console.log("otp signup successful");
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-            res.redirect("/");
-          } else {
-            session = req.session;
-            session.invalidOTP = true;
-            res.redirect("/otpLoginVerify");
-          }
+          resolve(userData);
         });
-    } else {
-      session = req.session;
-      session.invalidOTP = true;
-      res.redirect("/otpLoginVerify");
-    }
+    });
+  },
+  otpSignupVerifyPost: (user, otp) => {
+    return new Promise(async (resolve, reject) => {
+      if (otp.length === 6) {
+        client.verify
+          .services(process.env.serviceID)
+          .verificationChecks.create({
+            to: `+91${user.Mobilenumber}`,
+            code: otp,
+          })
+          .then((data) => {
+            if (data.status === "approved") {
+              resolve(user)
+            } else {
+              reject(new Error("Invalid OTP"));
+            }
+          })
+          .catch((error) => {
+            reject(error); // Reject on any other errors
+          });
+      } else {
+        reject(new Error("Invalid OTP Format"));
+      }
+    });
   },
 
   doLogin: (userData) => {
