@@ -7,6 +7,10 @@ const { check, validationResult } = require("express-validator");
 var objectId = require("mongodb").ObjectId;
 var db = require("../config/connection");
 var collection = require("../config/collections");
+const sgMail = require("@sendgrid/mail");
+const jwt = require("jsonwebtoken");
+
+sgMail.setApiKey(process.env.sendGridApiKey);
 
 const verifyLogin = (req, res, next) => {
   if (req.session.userLoggedIn) {
@@ -25,8 +29,14 @@ router.get("/", async function (req, res, next) {
     cartCount = await userHelpers.getCartCount(req.session.user._id);
   }
   productHelpers.getAllProducts().then((products) => {
-    const renderProducts = JSON.stringify(products)
-    res.render("user/view-products", { products, renderProducts, user, cartCount, userHome });
+    const renderProducts = JSON.stringify(products);
+    res.render("user/view-products", {
+      products,
+      renderProducts,
+      user,
+      cartCount,
+      userHome,
+    });
   });
 });
 
@@ -42,7 +52,7 @@ router.get("/login", function (req, res, next) {
 router.get("/signup", function (req, res, next) {
   res.render("user/signup");
 });
- 
+
 router.post(
   "/signup",
   check("Name").notEmpty().withMessage("Please enter a Name"),
@@ -66,11 +76,16 @@ router.post(
     .matches(/[!@#$%^&*?]/)
     .withMessage("Password must contain at least one special character"),
   async (req, res, next) => {
+    const userExist = await db
+      .get()
+      .collection(collection.USER_COLLECTION)
+      .find({ Email: req.body.Email })
+      .toArray();
 
-    const userExist = await db.get().collection(collection.USER_COLLECTION).find({Email: req.body.Email}).toArray()
-  
-    if(userExist.length > 0){
-      return res.render("user/signup", { userExistError: "User already exists" });
+    if (userExist.length > 0) {
+      return res.render("user/signup", {
+        userExistError: "User already exists",
+      });
     }
 
     const errors = validationResult(req);
@@ -91,7 +106,7 @@ router.post(
         req.session.user = response;
         // req.session.userLoggedIn = true;
         res.redirect("/otpLoginVerify");
-      })
+      });
     }
   }
 );
@@ -101,25 +116,28 @@ router.get("/otpLoginVerify", (req, res) => {
   res.render("user/otpLoginVerify", { errorMessage });
 });
 
-router.post('/resend-otp', (req, res) => {
-  const user = req.session.user
-  userHelpers.sendOtp(user)
-})
+router.post("/resend-otp", (req, res) => {
+  const user = req.session.user;
+  userHelpers.sendOtp(user);
+});
 
 router.post("/otpLoginVerify", (req, res) => {
-  const user = req.session.user
-  const otp = req.body.otp
-  userHelpers.otpSignupVerifyPost(user, otp).then((response) => {
-    req.session.user = response;
-    req.session.userLoggedIn = false;
-    userHelpers.doSignup(user).then((response) => {
-      res.redirect('/login')
+  const user = req.session.user;
+  const otp = req.body.otp;
+  userHelpers
+    .otpSignupVerifyPost(user, otp)
+    .then((response) => {
+      req.session.user = response;
+      req.session.userLoggedIn = false;
+      userHelpers.doSignup(user).then((response) => {
+        res.redirect("/login");
+      });
     })
-  }).catch((error) => {
-    console.log(error)
-    const errorMessage = encodeURIComponent(error); // Encode the error message
-  res.redirect(`/otpLoginVerify?error=${errorMessage}`);
-  })
+    .catch((error) => {
+      console.log(error);
+      const errorMessage = encodeURIComponent(error); // Encode the error message
+      res.redirect(`/otpLoginVerify?error=${errorMessage}`);
+    });
 });
 
 router.post("/login", (req, res) => {
@@ -133,6 +151,74 @@ router.post("/login", (req, res) => {
       res.redirect("/login");
     }
   });
+});
+
+router.get("/forgot-password", (req, res) => {
+  const errorMessage = req.query.error;
+  res.render("user/forgotPassword", { errorMessage });
+});
+
+router.post("/sendResetLink", async (req, res) => {
+  const emailAddress = req.body.Email;
+
+  try {
+    const user = await userHelpers.getUserByEmail(emailAddress);
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    const msg = {
+      to: emailAddress,
+      from: {
+        name: "Downy Shoes",
+        email: process.env.sendGridEmail,
+      },
+      subject: "Reset your password",
+      text: `This email was sent to reset your password. For password reset, please click on this link http://localhost:3000/newPassword/${user._id}/${token}`,
+    };
+
+    await sgMail.send(msg);
+
+    console.log("Email sent successfully");
+
+    res.redirect('/login');
+  } catch (error) {
+    const errorMessage = encodeURIComponent(error); // Encode the error message
+
+    res.redirect(`/forgot-password?error=${errorMessage}`);
+  }
+});
+
+router.get("/newPassword/:userId/:token", (req, res) => {
+  const userId = req.params.userId;
+  const token = req.params.token;
+
+  try {
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    if (verifyToken) {
+      res.render("user/newPassword", { userId });
+    } else {
+      res.render("user/error", { title: "Page Not Found", layout: false });
+    }
+  } catch (error) {
+    console.error("Token verification error:", error);
+    res.render("user/error", { title: "Page Not Found", layout: false });
+  }
+});
+
+router.post("/changePassword/:userId", (req, res) => {
+  const password = req.body.Password;
+  const userId = req.params.userId;
+  const confirmPassword = req.body.confirmPassword;
+  if (password === confirmPassword && password !== "") {
+    userHelpers.updatePassword(userId, password).then((response) => {
+      res.redirect("/login");
+    });
+  } else {
+    console.log("error");
+  }
 });
 
 router.get("/logout", (req, res) => {
@@ -149,7 +235,7 @@ router.get("/cart", verifyLogin, async (req, res) => {
   }
   let user = req.session.user;
   cartCount = await userHelpers.getCartCount(req.session.user._id);
-  const renderProducts = JSON.stringify(products)
+  const renderProducts = JSON.stringify(products);
   res.render("user/cart", { products, renderProducts, user, cartCount, total });
 });
 

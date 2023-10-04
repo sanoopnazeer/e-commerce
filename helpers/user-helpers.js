@@ -52,7 +52,7 @@ module.exports = {
           })
           .then((data) => {
             if (data.status === "approved") {
-              resolve(user)
+              resolve(user);
             } else {
               reject(new Error("Invalid OTP"));
             }
@@ -87,6 +87,37 @@ module.exports = {
       } else {
         resolve({ status: false });
       }
+    });
+  },
+  getUserByEmail: (email) => {
+    return new Promise(async (resolve, reject) => {
+      const user = await db
+        .get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ Email: email })
+        .then((response) => {
+          if (response) {
+            resolve(response);
+          } else {
+            reject(new Error("User doesnot exist"));
+          }
+        });
+    });
+  },
+  updatePassword: (userId, password) => {
+    return new Promise(async (resolve, reject) => {
+      const newPassword = await bcrypt.hash(password, 10);
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .updateOne(
+          { _id: objectId(userId) },
+          {
+            $set: {
+              Password: newPassword,
+            },
+          }
+        )
+        .then((response) => resolve(response));
     });
   },
   getAllUsers: () => {
