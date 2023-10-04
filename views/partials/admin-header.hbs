@@ -6,7 +6,7 @@
 		<div class="sidenav-header">
 			<i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
 				aria-hidden="true" id="iconSidenav"></i>
-			<a class="navbar-brand m-0" href="" target="_blank">
+			<a class="navbar-brand m-0" href="" target="">
 				<img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
 				<span class="ms-1 font-weight-bold text-white">ADMIN PANEL</span>
 			</a>
@@ -68,13 +68,13 @@
 				</li>
 				<li class="nav-item">
 					{{#if admin}}
-					<a class="nav-link text-white ">
+					{{!-- <a class="nav-link text-white ">
 						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="material-icons opacity-10">login</i>
 						</div>
 						<span class="nav-link-text ms-1">{{admin.Name}}</span>
 					</a>
-				</li>
+				</li> --}}
 				<li class="nav-item">
 					<a class="nav-link text-white " href="/admin/adminLogout">
 						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -97,7 +97,7 @@
 						<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="material-icons opacity-10">assignment</i>
 						</div>
-						<span class="nav-link-text ms-1">Sign Up</span>
+						<span class="nav-link-text ms-1">New Admin</span>
 					</a>
 				</li>
 			</ul>

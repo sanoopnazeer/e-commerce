@@ -344,6 +344,28 @@ router.get("/view-orders", async (req, res) => {
   const user = req.session.user;
   cartCount = await userHelpers.getCartCount(req.session.user._id);
   const allOrders = await userHelpers.getAllOrders(req.session.user._id);
+
+  const formattedOrderDates = allOrders.map((orders) => {
+     const date = new Date();
+
+      // Define date format options
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        // second: "2-digit",
+        hour12: true, // Use 12-hour format
+      };
+
+      // Format the date
+      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        orders.date
+      );
+      orders.date = formattedDate;
+
+  })
   res.render("user/view-orders", { user, allOrders, cartCount });
 });
 

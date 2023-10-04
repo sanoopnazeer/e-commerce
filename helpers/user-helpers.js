@@ -368,25 +368,6 @@ module.exports = {
   },
   placeOrder: (order, products, total) => {
     return new Promise((resolve, reject) => {
-      const date = new Date();
-
-      // Define date format options
-      const options = {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true, // Use 12-hour format
-      };
-
-      // Format the date
-      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-        date
-      );
-
-      console.log("Formatted Date:", formattedDate);
 
       let status = order["payment-method"] === "COD" ? "placed" : "pending";
       let orderObj = {
@@ -402,19 +383,9 @@ module.exports = {
         products: products,
         totalAmount: total,
         status: status,
-        date: formattedDate,
+        date: new Date(),
         FinalStatus: false,
       };
-
-      // db.get()
-      //   .collection(collection.USER_COLLECTION)
-      //   .updateOne(
-      //     { _id: objectId(order.userId) },
-      //     { $push: { address: orderObj.deliveryDetails } }
-      //   )
-      //   .then((response) => {
-      //     resolve();
-      //   });
 
       db.get()
         .collection(collection.ORDER_COLLECTION)
