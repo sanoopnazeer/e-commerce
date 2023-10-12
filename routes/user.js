@@ -175,7 +175,8 @@ router.post("/sendResetLink", async (req, res) => {
         email: process.env.sendGridEmail,
       },
       subject: "Reset your password",
-      text: `This email was sent to reset your password. For password reset, please click on this link http://localhost:3000/newPassword/${user._id}/${token}`,
+      // text: `This email was sent to reset your password. For password reset, please click on this link http://localhost:3000/newPassword/${user._id}/${token}`,
+      text: `This email was sent to reset your password. For password reset, please click on this link https://downyshoes.shop/newPassword/${user._id}/${token}`,
     };
 
     await sgMail.send(msg);
